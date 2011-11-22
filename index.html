@@ -20,29 +20,36 @@
 <body>
 	
 	<div class="header">
-		<h4>Your details</h4>
-		
+		<h4>Forum</h4>
+		<div class="profile">
+			<span class="image"><img src="images/profile.jpg" width="40" height="40" /></span>
+			<span class="alias"><a href="#">Skaggivara</a></span>
+		</div>
 	</div>
 	
 
 	<div class="menu">
 		<h4>Rooms</h4>
 		<ul>
+			<!--
 			<li><a href="#"><span class="title">Some cool room</span><span class="count">22</span></a></li>
 			<li class="active"><a href="#"><span class="title">Another really neat room..</span><span class="count">2</span></a></li>
 			<li><a href="#"><span class="title">Cosy neat room..</span><span class="count">12</span></a></li>
-			<li><a href="#"><span class="title">Swell neat room..</span><span class="count">5</span></a></li>
+			<li><a href="#"><span class="title">Swell neat room..</span><span class="count">5</span></a></li>-->
 		</ul>
 		
 		<a class="create-btn" href="#"><span>Create Room</span></a>
+		<!--
 		<a class="join-btn" href="#"><span>Join Room</span></a>
-		<a class="send-btn" href="#"><span>Send message</span></a>
+		<a class="send-btn" href="#"><span>Send message</span></a>-->
 	</div>
 	
 	<div class="content">
 		
+		<p class="info">Welcome to the forum, please pick a room from the left or create a new one.</p>
+		
 		<ul>
-			<li>
+			<!--<li>
 				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
 				
 				<div class="msg">
@@ -55,66 +62,43 @@
 					<span class="arrow"></span>
 					
 				</div>
-			</li>
-			
-			
-			<li>
-				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
-				
-				<div class="msg">
-
-					<div class="body">
-						<h5>Isak Wistrom</h5>
-						<p>Some coool message here..</p>
-					</div>
-					
-					<span class="arrow"></span>
-					
-				</div>
-			</li>
-			
-			<li>
-				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
-				
-				<div class="msg">
-
-					<div class="body">
-						<h5>Isak Wistrom</h5>
-						<p>Some coool message here..</p>
-					</div>
-					
-					<span class="arrow"></span>
-					
-				</div>
-			</li>
-			
-			
-			<li>
-				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
-				
-				<div class="msg">
-
-					<div class="body">
-						<h5>Isak Wistrom</h5>
-						<p>Some coool message here..</p>
-					</div>
-					
-					<span class="arrow"></span>
-					
-				</div>
-			</li>
+			</li>-->
 		</ul>
 
 	</div>
+	
+	<div class="avatars">
+		<ul>
+			<!--<li><img src="images/profile.jpg" /><span>Some dude</span></li>-->
+		</ul>
+	</div>
 		
 	<div class="input">
-		<input id="message" name="message" placeholder="your chat message..."/>
+		<form action="." id="message-form">
+		<input id="message" name="message" placeholder="Your chat message..."/>
+		</form>
 	</div>
 
-  <div class="login" style="position: absolute">
-      <input id="nick" name"nick" placeholder="Enter your nickname...">
-      <input id="email" name"email" placeholder="Enter your email...">
-      <button id="enter">Enter lobby</button>
+<div class="cover"></div>
+  <div class="login">
+	<h4>Pick your nick</h4>
+		<form action="." id="login-form">
+		<label for="nick">nickname *</label>
+      <input id="nick" name"nick" class="field" placeholder="enter your nickname">
+<label for="email">e-mail (If you want your <a href="http://gravatar.com">gravatar</a>)</label>
+      <input id="email" name"email" class="field" placeholder="enter your email">
+      <p class="note">* required</p>
+	<button id="enter">Enter lobby</button>
+	</form>
   </div>
+<div class="create-room">
+	<h4>Create a room</h4>
+	<form action="." id="create-form">
+		<label for="nick">Room name</label>
+      <input id="name" name"name" class="field" placeholder="Enter room name">
+	<button class="create-btn">Create</button>
+	<button class="cancel-btn">Cancel</button>
+	</form>
+</div>
 
 </body>

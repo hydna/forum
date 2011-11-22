@@ -13,6 +13,14 @@ html,body{
     overflow: hidden;
 }
 
+a{
+    color: #65a3ff;
+}
+
+button{
+    cursor: pointer;
+}
+
 .header{
     
     text-align: center;
@@ -39,6 +47,24 @@ html,body{
     text-shadow: #000 1px 1px 0;
 }
 
+.header .profile{
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.header .profile .image{
+    width: 40px;
+    height: 40px;
+}
+
+.header .profile .image{
+
+}
+/*
+<span class="image"><img src="images/profile.jpg" width="40" height="40" /></span>
+<span class="alias"><a href="#">Skaggivara</a></span>
+*/
 
 .content{
     position: absolute;
@@ -47,7 +73,7 @@ html,body{
     bottom: 40px;
     right: 0;
     left: 240px;
-    border-left: 1px solid #ccc;
+
     overflow: auto;
     
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#e0e0e0));
@@ -112,6 +138,10 @@ html,body{
     margin: 4px 0 2px 0;
 }
 
+.content .info{
+    padding: 20px;
+}
+
 .input{
     line-height: 0;
     position: absolute;
@@ -151,9 +181,9 @@ html,body{
     top: 40px;
     bottom: 0;
     left: 0;
-    right: 0;
-    overflow: none;
+    border-right: 1px solid #ccc;
     background: #ebebeb;
+    z-index: 4;
 }
 
 .menu h4{
@@ -238,4 +268,119 @@ text-align: left;
 .create-btn span{
     background: url(../images/add.png) left center no-repeat;
     padding-left: 15px;
+}
+
+.create-room,
+.login{
+    position: relative;
+    z-index: 10;
+    left: 50%;
+    top: 50%;
+    width: 240px;
+    height: 240px;
+    margin: -135px 0 0 -135px;
+    border-radius: 10px;
+    background:  -webkit-gradient(linear, 0% 0%, 0% 30%, from(#333), to(#111));
+    -webkit-box-shadow: #000 0 1px 5px 0px;
+    -moz-box-shadow: #000 0 1px 5px 0px;
+    padding: 10px 15px 15px 15px;
+}
+.create-room label,
+.login label{
+    display: block;
+    color: #fff;
+    margin: 0 0 5px 0;
+}
+.create-room h4,
+.login h4{
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    margin: 0 0 10px 0;
+}
+
+.create-room input,
+.login input{
+    display: block;
+    color: #333;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    height: 28px;
+    margin: 0 0 10px 0;
+    background: #fff;
+    border: none;
+    padding: 0 6px 0 6px;
+    border-radius: 5px;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 228px;
+    -webkit-box-shadow: #999 0 1px 2px 0px inset;
+}
+
+.login button{
+    margin: 10px 0 0 0;
+    float: right;
+    text-transform: none;
+    text-decoration: none;
+    color: #333;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: bold;
+    display: inline-block;
+    padding: 10px 14px 10px 16px;
+    border-radius: 18px;
+    border: none;
+    background:  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eeeeee));
+    -webkit-box-shadow: #000 0 1px 2px 0px;
+}
+
+.login .note{
+    color: #999;
+    font-size: 12px;
+}
+
+.create-room{
+    display: none;
+    height: 140px;
+    margin: -70px 0 0 -135px;
+}
+
+.avatars{
+    position: absolute;
+    left: 240px;
+    right: 0;
+    bottom: 40px;
+    background: #fff;
+    height: 60px;
+    opacity: .8;
+    padding: 0 0 0 5px;
+    overflow: hidden;
+    display: none;
+}
+
+.avatars span{
+    display: none;
+}
+
+.avatars li{
+    display: block;
+    float: left;
+    padding: 10px 5px 10px 5px;
+}
+
+.avatars li:first-child{
+    /*background: #65a3ff;*/
+}
+
+.cover{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: black;
+    z-index: 4;
+    opacity: .7;
 }

@@ -20,21 +20,48 @@ $(document).ready(function() {
 
     forum.onmessage = function(graph) {
       console.log(graph);
+      
+      $('.content').chatMessage( graph.nick, graph.message );
+      
     };
 
 
     $(".create-btn").click(function(event) {
 
       event.preventDefault();
-
-      forum.createRoom("bajskorv", function(err, channel) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log("Room created with channel #%s", channel);
-      });
+      
+      $('.cover').show();
+      $('.create-room').show();
+      $('.create-room #name').focus();
+      
     });
+    
+    $(".create-room .create-btn").click( function(event){
+        
+        event.preventDefault();
+        
+        var roomname = $('.create-room #name').val();
+        
+        forum.createRoom( roomname, function(err, channel) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+
+        });
+        
+    });
+    
+    $(".create-room .cancel-btn").click( function(event){
+        
+        event.preventDefault();
+        
+        $('.cover').hide();
+        $('.create-room').hide();
+        
+        $('.create-room #name').val('');
+        
+    } );
 
 
     $(".send-btn").click(function(event) {
@@ -59,14 +86,18 @@ $(document).ready(function() {
             console.error(err);
             return;
           }
+          
+          console.log('rooms opening');
 
           for (var k in list) {
             console.log(list[k]);
+        
+            
           }
 
-          forum.postMessage("Hello world!");
+         // forum.postMessage("Hello world!");
         });
-        console.log("Joined room #%s", channel);
+        console.log("Joined room");
       });
     });
 
@@ -91,108 +122,102 @@ $(document).ready(function() {
             console.error(err);
             return;
           }
+          
+          for( var i = 0, l = rooms.length; i < l; i++ ){
+              
+              var roomitem = $('<li><a href="#" data-channel="'+rooms[i].channel+'"><span class="title">'+rooms[i].title+'</span><span class="count">'+rooms[i].count+'</span></a></li>');
+              
+              roomitem.hide(0);
+              roomitem.fadeIn();
 
-          console.log(rooms);
+              $('.menu ul').append(roomitem);
+          }
 
         });
+        
+        var src = 'http://www.gravatar.com/avatar/'+hash+'?s=40.jpg';
+        var profileimg = new Image();
+        
+        profileimg.onload = function(){
+            
+            var profile = $('<li><img src="'+src+'" /><span>'+nick+'</span></li>');
+            
+            profile.hide(0);
+            profile.fadeIn();
+            
+            $('.avatar ul').append( profile );
+            
+        }
+        
+        profileimg.src = src;
+        
+        
         $(".login button").attr("disabled", "");
 
 
         $(".login").hide();
+        $(".cover").hide();
+        
       });
     });
-});
-    /*
-    var nick = nickgen();
-    var chat = $('#chat');
 
-    // open a stream to hydna in read/write mode
-    var stream = new HydnaStream('demo.hydna.net/2222', 'rw');
-
-    // draw figure when data is received over stream
-    stream.onmessage = function(message) {
-        var packet = JSON.parse(message);
-        switch(packet.type) {
-        case 'join':
-            chat.infoMessage(packet.nick + ' has entered the chat!');
-            break;
-        case 'msg':
-            chat.chatMessage(packet.nick, packet.message);
-            break;
-        }
-        // scroll to bottom of chat. this could be disabled when the user
-        // has manually scrolled.
-        chat.attr('scrollTop', chat.attr('scrollHeight'));
-    };
-
-    stream.onerror = function(err) {
-        chat.errorMessage('An error has occured. ' + err.error);
-    };
-    stream.onclose = function(err) {
-        chat.infoMessage('Connection closed. Please reload page.');
-    }
-
-    // initiate paint when stream is ready.
-    stream.onopen = function() {
-        chat.infoMessage('You are now connected and will henceforth be known as "' + nick + '".');
-        stream.send(JSON.stringify({
-            nick: nick,
-            type: 'join'
-        }));
-    };
-
-    $('#input input').focus();
-
-    $('form').submit(function(event) {
+    $('#message-form').submit(function(event) {
         event.preventDefault();
         var input = $('input', this);
+    
         if (input.val()) {
-            stream.send(JSON.stringify({
-                nick: nick,
-                type: 'msg',
-                message: input.val()
-            }));
+            console.log( input.val() );
+            
+            //forum.postMessage( input.val() );
+            
+            $('.content').chatMessage( "john", input.val(), ""  );
+            
             input.val('');
         }
     });
+    
+    
+    $(".menu ul li a").live( 'click', function(event){
+        
+        event.preventDefault();
+        
+        $(".menu ul li").removeClass("active");
+        
+        $(this).parent().addClass("active");
+        
+       // $('.content').chatMessage( "john", "mr loooooooooooool", "" );
+        
+        
+        console.log( $(this).attr('data-channel') );
+        
+    } );
 });
-
-function nickgen() {
-    var consonants = 'bcddfghklmmnnprssttv';
-    var vocals = 'aaeeiioouuy';
-    var length = 4 + Math.floor(Math.random() * 4);
-    var nick = [];
-    var pool;
-    for (var i = 0; i < length; i++) {
-        pool = (i % 2?vocals:consonants);
-        nick.push(pool.charAt(Math.floor(Math.random() * pool.length)));
-    }
-    return nick.join('');
-}
 
 function time() {
     var d = new Date();
     var h = d.getHours();
     var m = d.getMinutes();
-    return (h < 12?'0' + h:h) + ':' + (m < 10?'0' + m:m);
+    var s = d.getSeconds();
+    return (h < 12?'0' + h:h) + ':' + (m < 10?'0' + m:m)  + ':' +(s < 10?'0' + s:s);
 }
 
-$.fn.chatMessage = function(nick, message) {
+$.fn.chatMessage = function(nick, message, profile) {
+    
     nick = nick.replace(/<([^>]+)>/g,'');
     message = message.replace(/<([^>]+)>/g,'');
-    $(this).append([
-        '<p class="message">',
-        '<span class="time">[',
-        time(),
-        ']</span>',
-        '<span class="nick">',
-        nick,
-        ':</span>',
-        message,
-        '</p>'
-    ].join(''));
+    
+    var msg = $('<li><div class="profile"><img src="'+profile+'" width="40" height="40"/></div><div class="msg"><div class="body"><h5>'+nick+' at '+time()+'</h5><p>'+message+'</p></div><span class="arrow"></span></div></li>');
+    
+    msg.hide();
+    msg.fadeIn('fast');
+	
+	$('ul', $(this)).append( msg );
+	
+	$(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
+	
+	// scroll to bottom
 };
-
+/*
 $.fn.infoMessage = function(message) {
     $(this).append([
         '<p class="info">',

@@ -11,7 +11,7 @@
 
 
   // Constants
-  var ROOT_URL            = "localhost:7010";
+  var ROOT_URL            = "192.168.0.17:7010";
   var LOBBY_CHANNEL       = 1;
 
 
@@ -279,7 +279,7 @@ console.log("MESAGE: " + event.data);
       user: connid,
       message: message
     };
-console.log("POST!");
+
     roomChannel.send(JSON.stringify(graph));
   }
 
