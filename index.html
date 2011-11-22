@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>Hydna Chat</title>
+
+	<link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+	<link href="style/master.css" rel="stylesheet" type="text/css" />
+
+	<script src="script/lib.js"></script>
+	<script src="script/md5.js"></script>
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	
+	<script src="script/api.js"></script>
+
+	<script src="script/app.js"></script>
+	
+    
+</head>
+<body>
+	
+	<div class="header">
+		<h4>Your details</h4>
+		
+	</div>
+	
+
+	<div class="menu">
+		<h4>Rooms</h4>
+		<ul>
+			<li><a href="#"><span class="title">Some cool room</span><span class="count">22</span></a></li>
+			<li class="active"><a href="#"><span class="title">Another really neat room..</span><span class="count">2</span></a></li>
+			<li><a href="#"><span class="title">Cosy neat room..</span><span class="count">12</span></a></li>
+			<li><a href="#"><span class="title">Swell neat room..</span><span class="count">5</span></a></li>
+		</ul>
+		
+		<a class="create-btn" href="#"><span>Create Room</span></a>
+		<a class="join-btn" href="#"><span>Join Room</span></a>
+		<a class="send-btn" href="#"><span>Send message</span></a>
+	</div>
+	
+	<div class="content">
+		
+		<ul>
+			<li>
+				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
+				
+				<div class="msg">
+
+					<div class="body">
+						<h5>Isak Wistrom</h5>
+						<p>Some coool message here, I would like to say that this is really fine and how do we make lol...</p>
+					</div>
+					
+					<span class="arrow"></span>
+					
+				</div>
+			</li>
+			
+			
+			<li>
+				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
+				
+				<div class="msg">
+
+					<div class="body">
+						<h5>Isak Wistrom</h5>
+						<p>Some coool message here..</p>
+					</div>
+					
+					<span class="arrow"></span>
+					
+				</div>
+			</li>
+			
+			<li>
+				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
+				
+				<div class="msg">
+
+					<div class="body">
+						<h5>Isak Wistrom</h5>
+						<p>Some coool message here..</p>
+					</div>
+					
+					<span class="arrow"></span>
+					
+				</div>
+			</li>
+			
+			
+			<li>
+				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
+				
+				<div class="msg">
+
+					<div class="body">
+						<h5>Isak Wistrom</h5>
+						<p>Some coool message here..</p>
+					</div>
+					
+					<span class="arrow"></span>
+					
+				</div>
+			</li>
+		</ul>
+
+	</div>
+		
+	<div class="input">
+		<input id="message" name="message" placeholder="your chat message..."/>
+	</div>
+
+  <div class="login" style="position: absolute">
+      <input id="nick" name"nick" placeholder="Enter your nickname...">
+      <input id="email" name"email" placeholder="Enter your email...">
+      <button id="enter">Enter lobby</button>
+  </div>
+
+</body>
