@@ -21,6 +21,10 @@ button{
     cursor: pointer;
 }
 
+strong{
+    font-weight: bold;
+}
+
 .header{
     
     text-align: center;
@@ -49,41 +53,48 @@ button{
 
 .header .profile{
     position: absolute;
-    left: 0;
+    right: 0;
     top: 0;
+    display: none;
 }
 
 .header .profile .image{
+    float: left;
     width: 40px;
     height: 40px;
+    padding: 0 0 0 0;
 }
 
-.header .profile .image{
-
+.header .profile .alias{
+    font-size: 12px;
+    padding: 0 10px 0 10px;
+    float: left;
+    display: block;
+    line-height: 40px;
 }
-/*
-<span class="image"><img src="images/profile.jpg" width="40" height="40" /></span>
-<span class="alias"><a href="#">Skaggivara</a></span>
-*/
 
 .content{
     position: absolute;
     padding: 0;
     top: 40px;
     bottom: 40px;
-    right: 0;
+    right: 200px;
     left: 240px;
-
     overflow: auto;
     
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#e0e0e0));
     background: #ebebeb;
 }
 
+.content strong{
+    font-weight: bold;
+}
+
 .content li{
     position: relative;
     clear: both;
-    margin: 20px;
+    margin: 15px 20px 15px 20px;
+    word-break: break-all;
     
 }
 
@@ -96,8 +107,9 @@ button{
 .content li .profile img{
     border-radius: 20px;
     margin-top: -20px;
-    -webkit-box-shadow: #666 1px 1px 2px 0px inset;
-    -moz-box-shadow: #666 1px 1px 2px 0px inset;
+    /*-webkit-box-shadow: #666 1px 1px 2px 0px inset;
+    -moz-box-shadow: #666 1px 1px 2px 0px inset;*/
+    background: url(../images/loader.gif) center center no-repeat;
 }
 
 .content li .msg{
@@ -139,7 +151,7 @@ button{
 }
 
 .content .info{
-    padding: 20px;
+    padding: 20px 20px 10px 20px;
 }
 
 .input{
@@ -249,7 +261,7 @@ text-align: left;
     text-shadow: #000 0 1px 0;
 }
 
-.create-btn{
+.menu .create-btn{
     margin: 15px 0 10px 0;
     text-transform: none;
     text-decoration: none;
@@ -349,25 +361,67 @@ text-align: left;
 
 .avatars{
     position: absolute;
-    left: 240px;
     right: 0;
+    top: 40px;
     bottom: 40px;
-    background: #fff;
-    height: 60px;
+    width: 200px;
     opacity: .8;
-    padding: 0 0 0 5px;
+    padding: 0 0 0 0;
+    border-left: 1px solid #ccc;
     overflow: hidden;
-    display: none;
+    
 }
 
 .avatars span{
-    display: none;
+    font-size: 12px;
+    float: left;
+    display:block;
+    line-height: 40px;
+    padding: 0 5px 0 5px;
 }
 
-.avatars li{
+.avatars img{
     display: block;
     float: left;
-    padding: 10px 5px 10px 5px;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    background: url(../images/loader.gif) center center no-repeat;
+    
+}
+
+.avatars ul{
+    overflow: auto;
+}
+.avatars li{
+    position: relative;
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    height: 40px;
+    background: #fff;
+}
+
+.avatars .typing{
+    right: 10px;
+    top: 50%;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin-top: -10px;
+    background: url(../images/typing.png) center center no-repeat;
+}
+
+.avatars h4{
+    text-align: left;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: bold;
+    color: #fff;
+    background: #121212;
+    background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
+    padding: 8px 10px 8px 10px;
 }
 
 .avatars li:first-child{

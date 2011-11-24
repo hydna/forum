@@ -6,8 +6,11 @@
   exports.joinRoom        = joinRoom;
   exports.getUserList     = getUserList;
   exports.postMessage     = postMessage;
+  exports.postTyping      = postTyping;
+  exports.currentChannel  = currentChannel;
   exports.onnotif         = null;
   exports.onmessage       = null;
+
 
 
   // Constants
@@ -21,6 +24,7 @@
   var userNick            = null;
   var userHash            = null;
   var roomChannel         = null;
+  var currentChannel      = null;
   var lobbyCallbacks      = {};
 
 
@@ -64,7 +68,7 @@
       var message = graph[1];
 
       if (method == "notif") {
-        console.log("notif %s", message);
+        //console.log("notif %s", message);
         if (exports.onnotif) {
           exports.onnotif(code, message);
         }
@@ -149,13 +153,23 @@
 
     createRoomChannel(chanid, function(err, channel) {
       if (err) {
+         console.log('error--');
         return callback(err);
       }
 
       roomChannel = channel;
 
-      return callback();
+      getUserList(function( err, list ) {
+        return callback(err, list);
+      });
+
     });
+  }
+  
+  function currentChannel(){
+      
+      return roomChannel && roomChannel.id;
+      
   }
 
   function getUserList(callback) {
@@ -213,7 +227,8 @@
       var message = graph[1];
       var list;
       var details;
-console.log("Room message: " + message);
+      console.log("Room message: " + message);
+      
       switch (method) {
         case "get_user_list":
           list = message.split(";");
@@ -238,7 +253,7 @@ console.log("Room message: " + message);
               details = chan.users[message];
               if (details) {
                 delete chan.users[message];
-                invokeNotif("user-join", details);
+                invokeNotif("user-leave", details);
               }
               break;
           }
@@ -248,24 +263,47 @@ console.log("Room message: " + message);
 
     chan.onmessage = function(event) {
       var graph;
-console.log("MESAGE: " + event.data);
+
       try {
         graph = JSON.parse(event.data);
       } catch (e) {
         return;
       }
-
+      
       if (!chan.users[graph.user]) {
         return;
       }
 
       if (exports.onmessage) {
+          
+          var msg = { user: chan.users[graph.user] };
+          
+          if( graph.message ){
+              msg.message = graph.message; 
+          }
+
+          
         exports.onmessage({
-          user: chan.users[graph.user],
-          message: graph.message
+            user: chan.users[graph.user],
+            message: graph.message
         });
+
       }
     }
+  }
+  
+  function postTyping(){
+      var graph;
+
+      if (!roomChannel) {
+        return;
+      }
+
+      graph = {
+        user: connid
+      };
+
+      roomChannel.send(JSON.stringify(graph));
   }
 
   function postMessage(message) {
@@ -299,7 +337,7 @@ console.log("MESAGE: " + event.data);
   }
 
   function callRemote(id, args, callback) {
-    console.log("call remote " + id);
+    //console.log("call remote " + id);
     lobbyChannel.emit(id + (args.length ? " " + args.join(",") : ""));
     lobbyCallbacks[id] = callback;
   }
