@@ -5,23 +5,23 @@ var NICK_MIN_LENGTH     = 2;
 var ROOM_MIN_LENGTH     = 3;
 var ROOM_MAX_LENGTH     = 20;
 var MIN_NORMAL_WIDTH    = 600;
-var GRAVATAR_URL        = 'http://www.gravatar.com/avatar/%s?s=40.jpg';
+var GRAVATAR_URL        = "http://www.gravatar.com/avatar/%s?s=40.jpg";
 
-var displayMode         = 'normal';
+var displayMode         = "normal";
 var typingsent          = false;
     
 $(document).ready(function() {
     
-    console.log('in business');
+    console.log("in business");
     
     // change nick --
     
     forum.onmessage = function(graph) {
         
       if( graph.message ){
-          $('.content').chatMessage( graph.user.nick, graph.message, graph.user.hash );
+          $(".content").chatMessage( graph.user.nick, graph.message, graph.user.hash );
       }else{
-          $('.avatars').typing( graph.user.id );
+          $(".avatars").typing( graph.user.id );
       }
       
     };
@@ -34,7 +34,7 @@ $(document).ready(function() {
                 
                 if( message.channel == forum.currentChannel() ){
                     
-                    $('.content').statusMessage( "<strong>"+message.nick + "</strong> just joined this room." );
+                    $(".content").statusMessage( ["<strong>",message.nick,"</strong> just joined this room."].join("") );
 
                     var user = {};
                     user[message.id] = message;
@@ -50,12 +50,12 @@ $(document).ready(function() {
             
             case "user-leave": // we know it is our channel?
                 
-                $('.content').statusMessage( "<strong>"+message.nick + "</strong> just left this room." );
+                $(".content").statusMessage( ["<strong>",message.nick,"</strong> just left this room."].join("") );
                 
                 var user = {};
                 user[message.id] = message;
                 
-                $('.avatars').updateUserList( user, true );
+                $(".avatars").updateUserList( user, true );
                 
             break;
             
@@ -65,7 +65,7 @@ $(document).ready(function() {
                 var channel = info[0];
                 var title = info[1];
                 
-                $('.menu').addRoom( channel, title, 0 );
+                $(".menu").addRoom( channel, title, 0 );
             
             break;
             
@@ -75,11 +75,11 @@ $(document).ready(function() {
                 var channel = info[0];
                 var count = info[1];
                 
-                $('.menu ul li a').each( function(){
+                $(".menu ul li a").each( function(){
                     
-                    if( $(this).attr('data-channel') == channel ){
+                    if( $(this).attr("data-channel") == channel ){
                         
-                        $( '.count', $(this)).html( count );
+                        $( ".count", $(this)).html( count );
                         
                         return;
                     }
@@ -92,11 +92,11 @@ $(document).ready(function() {
             
                 var channel = message;
                 
-                $('.menu ul li a').each( function(){
+                $(".menu ul li a").each( function(){
                     
-                    if( $(this).attr('data-channel') == channel ){
+                    if( $(this).attr("data-channel") == channel ){
                         
-                        $(this).attr('data-channel', '-1');
+                        $(this).attr("data-channel", "-1");
                         
                         $(this).slideUp( function(){
                             $(this).remove();
@@ -114,9 +114,9 @@ $(document).ready(function() {
     
     $(".create-btn").click(function(event) {
         event.preventDefault();
-        $('.cover').show();
-        $('.create-room').show();
-        $('.create-room #name').focus();
+        $(".cover").show();
+        $(".create-room").show();
+        $(".create-room #name").focus();
       
     });
     
@@ -124,7 +124,7 @@ $(document).ready(function() {
         
         event.preventDefault();
         
-        var roomname = $('.create-room #name').val();
+        var roomname = $(".create-room #name").val();
         
         if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ||
             /^[A-Za-z0-9\_\-]+$/.test(roomname) == false ){
@@ -141,9 +141,9 @@ $(document).ready(function() {
                 return;
             }
             
-            $('.cover').hide();
-            $('.create-room').hide();
-            $('.create-room #name').val('');
+            $(".cover").hide();
+            $(".create-room").hide();
+            $(".create-room #name").val("");
             
             joinRoom( channel, function(err, userlist){
                 if( err ){
@@ -151,18 +151,18 @@ $(document).ready(function() {
                     return;
                 }
                 
-                $('.content .info').remove();
+                $(".content .info").remove();
                 
                 if( userlist ){
                     
-                    $('.content ul').html('');
-                    $('.content').statusMessage('You joined the room <strong>'+roomname+'</strong>.' );
+                    $(".content ul").html("");
+                    $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                     
-                    $('.header h4').html("Forum - "+roomname);
+                    $(".header h4").html(["Forum - ",roomname].join(""));
                     
                 }
             
-                $('#message-form input').focus();
+                $("#message-form input").focus();
                 
             });
             
@@ -173,10 +173,10 @@ $(document).ready(function() {
         
         event.preventDefault();
         
-        $('.cover').hide();
-        $('.create-room').hide();
+        $(".cover").hide();
+        $(".create-room").hide();
         
-        $('.create-room #name').val('');
+        $(".create-room #name").val("");
         
     } );
 
@@ -206,7 +206,7 @@ $(document).ready(function() {
           return;
         }
         
-        $('.profile').updateProfile( nick, hash );
+        $(".profile").updateProfile( nick, hash );
         
 
         forum.getRoomList(function(err, rooms) {
@@ -218,7 +218,7 @@ $(document).ready(function() {
           
           for( var i = 0, l = rooms.length; i < l; i++ ){
               
-              $('.menu').addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
+              $(".menu").addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
           }
          
         });
@@ -233,17 +233,17 @@ $(document).ready(function() {
 
     $('#message-form').submit(function(event) {
         event.preventDefault();
-        var input = $('input', this);
+        var input = $("input", this);
     
         if (input.val()) {
             
             forum.postMessage( input.val() );
             
-            input.val('');
+            input.val("");
         }
     });
     
-    $('#message-form input').keydown( function(){
+    $("#message-form input").keydown( function(){
         
         if( !typingsent ){
             
@@ -260,7 +260,7 @@ $(document).ready(function() {
     });
     
     
-    $(".menu ul li a").live( 'click', function(event){
+    $(".menu ul li a").live( "click", function(event){
         
         event.preventDefault();
         
@@ -268,8 +268,8 @@ $(document).ready(function() {
         
         $(this).parent().addClass("active");
         
-        var channel = $(this).attr('data-channel');
-        var roomname = $(this).attr('data-title');
+        var channel = $(this).attr("data-channel");
+        var roomname = $(this).attr("data-title");
         
         joinRoom( channel, function(err, userlist){
             
@@ -278,25 +278,24 @@ $(document).ready(function() {
                 return;
             }
             
-            $('.content .info').remove();
+            $(".content .info").remove();
             
             if( userlist ){
                 
-                $('.content ul').html('');
-                $('.content').statusMessage('You joined the room <strong>'+roomname+'</strong>.' );
+                $(".content ul").html("");
+                $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                 
-                $('.header h4').html("Forum - "+roomname);
-                //$('.avatar ul').html('');
+                $('.header h4').html(["Forum - ",roomname].join(""));
                 
             }
             
-            $('#message-form input').focus();
+            $("#message-form input").focus();
             
         } );
         
     } );
     
-    $('.cover').click( function(event){
+    $(".cover").click( function(event){
         event.preventDefault();
     } );
     
@@ -308,12 +307,12 @@ $(document).ready(function() {
         var w = $(window).width();
         
         if( w < MIN_NORMAL_WIDTH ){
-            if( displayMode == 'normal' ){
-                displayMode = 'mobile';
+            if( displayMode == "normal" ){
+                displayMode = "mobile";
             }
         }else{
-            if( displayMode == 'mobile' ){
-                displayMode = 'normal';
+            if( displayMode == "mobile" ){
+                displayMode = "normal";
             }
         }
     });
@@ -329,13 +328,13 @@ function joinRoom( id, callback ){
           return;
         }
         
-        $('.menu ul li').removeClass('active');
+        $(".menu ul li").removeClass("active");
         
-        $('.menu ul li a').each( function(){
+        $(".menu ul li a").each( function(){
             
-            if( $(this).attr('data-channel') == forum.currentChannel() ){
+            if( $(this).attr("data-channel") == forum.currentChannel() ){
                 
-                $(this).parent().addClass('active');
+                $(this).parent().addClass("active");
                 
                 return;
             }
@@ -343,8 +342,8 @@ function joinRoom( id, callback ){
         });
         
         if( userlist ){
-            $('.avatars ul li').remove();
-            $('.avatars').updateUserList( userlist );
+            $(".avatars ul li").remove();
+            $(".avatars").updateUserList( userlist );
         }
         
         callback( null, userlist );
@@ -361,13 +360,13 @@ function time() {
 
 $.fn.typing = function( user ){
     
-    $( 'li', $(this) ).each( function(){
-        var id = $(this).attr('data-id');
+    $( "li", $(this) ).each( function(){
+        var id = $(this).attr("data-id");
         if( user == id ){
-            if( $( '.typing', $(this)).length == 0 ){
-                var typewriter = $('<span class="typing"></span>');
+            if( $( ".typing", $(this)).length == 0 ){
+                var typewriter = $("<span class='typing'></span>");
                 typewriter.hide();
-                typewriter.fadeIn('fast').delay(1000).fadeOut( 'fast', function(){
+                typewriter.fadeIn("fast").delay(1000).fadeOut( "fast", function(){
                     $(this).remove();
                 });
             
@@ -379,8 +378,8 @@ $.fn.typing = function( user ){
 
 $.fn.updateProfile = function( name, hash ){
     
-    $('img', $(this)).attr('src', GRAVATAR_URL.replace('%s', hash) );
-    $('.alias', $(this)).html( name );
+    $("img", $(this)).attr("src", GRAVATAR_URL.replace("%s", hash) );
+    $(".alias", $(this)).html( name );
     
     $(this).fadeIn();
     
@@ -390,10 +389,10 @@ $.fn.updateUserList = function( list, remove ){
     
     var match = false;
     
-    $('li',$(this)).each( function(){
+    $("li",$(this)).each( function(){
         
-        var id = $(this).attr('data-id');
-        var name = $(this).attr('data-name');
+        var id = $(this).attr("data-id");
+        var name = $(this).attr("data-name");
         
         for( var k in list ){
             
@@ -402,7 +401,7 @@ $.fn.updateUserList = function( list, remove ){
                 match = true;
                 
                 if( remove ){
-                    $(this).attr('data-id', '-1');
+                    $(this).attr("data-id", "-1");
                     $(this).slideUp( function(){
                         $(this).remove();
                     });
@@ -423,12 +422,12 @@ $.fn.updateUserList = function( list, remove ){
             var nick = list[k].nick;
             var hash = list[k].hash;
 
-            var item = $('<li data-id="'+id+'" data-name="'+nick+'"><img src="'+GRAVATAR_URL.replace('%s', hash)+'" /><span>'+nick+'</span></li>');
+            var item = $(["<li data-id='",id,"' data-name='",nick,"'><img src='",GRAVATAR_URL.replace('%s', hash),"' /><span>",nick,"</span></li>"].join(""));
 
             item.hide();
-            item.fadeIn('fast');
+            item.fadeIn("fast");
 
-            $('ul',$(this)).append( item );
+            $("ul",$(this)).append( item );
 
         }
    }
@@ -437,14 +436,14 @@ $.fn.updateUserList = function( list, remove ){
 
 $.fn.statusMessage = function( message ){
     
-    message = message.replace(/<([^>]+)>/g,'');
+    message = message.replace(/<([^>]+)>/g,"");
     
-    var msg = $('<li>'+time()+' - '+message+'</li>');
+    var msg = $(["<li>",time()," - ",message,"</li>"].join(""));
     
     msg.hide();
-    msg.fadeIn('fast');
+    msg.fadeIn("fast");
     
-    $('ul', $(this)).append( msg );
+    $("ul", $(this)).append( msg );
     
     // scroll to bottom
 	$(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
@@ -452,15 +451,15 @@ $.fn.statusMessage = function( message ){
 
 $.fn.chatMessage = function(nick, message, profile) {
     
-    nick = nick.replace(/<([^>]+)>/g,'');
-    message = message.replace(/<([^>]+)>/g,'');
+    nick = nick.replace(/<([^>]+)>/g,"");
+    message = message.replace(/<([^>]+)>/g,"");
     
-    var msg = $('<li><div class="profile"><img src="'+GRAVATAR_URL.replace('%s', profile)+'" width="40" height="40"/></div><div class="msg"><div class="body"><h5>'+nick+' at '+time()+'</h5><p>'+message+'</p></div><span class="arrow"></span></div></li>');
+    var msg = $(["<li><div class='profile'><img src='",GRAVATAR_URL.replace('%s', profile),"' width='40' height='40'/></div><div class='msg'><div class='body'><h5>",nick," at ",time(),"</h5><p>",message,"</p></div><span class='arrow'></span></div></li>"].join(""));
     
     msg.hide();
-    msg.fadeIn('fast');
+    msg.fadeIn("fast");
 	
-	$('ul', $(this)).append( msg );
+	$("ul", $(this)).append( msg );
 	
 	// scroll to bottom
 	$(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
@@ -470,20 +469,20 @@ $.fn.chatMessage = function(nick, message, profile) {
 
 $.fn.addRoom = function( channel, title, count ) {
     
-    var code = [ '<li><a href="#" data-channel="',channel,'" data-title="',title,'"><span class="title">',title,'</span><span class="count">',count,'</span></a></li>' ].join('');
+    var code = ["<li><a href='#' data-channel='",channel,"' data-title='",title,"'><span class='title'>",title,"</span><span class='count'>",count,"</span></a></li>" ].join('');
     
     var roomitem = $(code);
       
     roomitem.hide();
-    roomitem.fadeIn('fast');
+    roomitem.fadeIn("fast");
     
-    $('ul', $(this)).append( roomitem );
+    $("ul", $(this)).append( roomitem );
 
 }
 
 $.fn.errorMessage = function( title, message, callback ) {
     
-    var status = 'ok';
+    var status = "ok";
     
     if( callback ){
         callback( status );
