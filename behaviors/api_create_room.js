@@ -17,14 +17,17 @@ var IMAGE_LENGTH        = 32;
 var connid              = connection.getID();
 var rooms               = resource.load("forum:rooms");
 var token               = script.env.TOKEN;
-var title               = token.split(" ")[1];
+var title               = null;
 var slotid              = null;
 var message             = null;
 
 
+title = token.substr(token.indexOf(" ") + 1);
+
+
 // Validate the name of the room
 if (title.length < NAME_MIN_LENGTH || title.length > NAME_MAX_LENGTH ||
-    /^[A-Za-z0-9\_\-]+$/.test(title) == false) {
+    /^[A-Za-z0-9\_\-\s]+$/.test(title) == false) {
   signal.reply("create_room:error BAD_TITLE");
   exit(1);
 }
