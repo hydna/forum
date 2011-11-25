@@ -1,14 +1,15 @@
 (function() {
     
-var NICK_MAX_LENGTH     = 20;
-var NICK_MIN_LENGTH     = 2;
-var ROOM_MIN_LENGTH     = 3;
-var ROOM_MAX_LENGTH     = 20;
-var MIN_NORMAL_WIDTH    = 600;
-var GRAVATAR_URL        = "http://www.gravatar.com/avatar/%s?s=40.jpg";
+var NICK_MAX_LENGTH         = 20;
+var NICK_MIN_LENGTH         = 2;
+var ROOM_MIN_LENGTH         = 3;
+var ROOM_MAX_LENGTH         = 20;
+var MIN_NORMAL_WIDTH        = 720;
+var MIN_CONTRACTED_WIDTH    = 480;
+var GRAVATAR_URL            = "http://www.gravatar.com/avatar/%s?s=40.jpg";
 
-var displayMode         = "normal";
-var typingsent          = false;
+var displayMode             = "normal"; // normal, contracted, mobile
+var typingsent              = false;
     
 $(document).ready(function() {
     
@@ -237,9 +238,15 @@ $(document).ready(function() {
     
         if (input.val()) {
             
-            forum.postMessage( input.val() );
+            if( forum.currentChannel() ){
             
-            input.val("");
+                forum.postMessage( input.val() );
+            
+                input.val("");
+                
+            }else{
+                alert("You need to enter a room before you can start sending messages.");
+            }
         }
     });
     
@@ -302,20 +309,9 @@ $(document).ready(function() {
     
     $(".login #nick").focus();
     
-    $(window).resize(function() {
-        
-        var w = $(window).width();
-        
-        if( w < MIN_NORMAL_WIDTH ){
-            if( displayMode == "normal" ){
-                displayMode = "mobile";
-            }
-        }else{
-            if( displayMode == "mobile" ){
-                displayMode = "normal";
-            }
-        }
-    });
+    $(window).resize( updateSize );
+    
+    updateSize();
     
 });
 
@@ -348,6 +344,36 @@ function joinRoom( id, callback ){
         
         callback( null, userlist );
     });
+}
+
+function updateSize(){
+    
+    var w = $(window).width();
+    
+    if( w < MIN_NORMAL_WIDTH && w > MIN_CONTRACTED_WIDTH ){
+        
+        if( displayMode != "contracted" ){
+            displayMode = "contracted";
+            
+            $("body").removeClass( "normal mobile" );
+            $("body").addClass( "contracted" );
+        }
+    }else if( w <= MIN_CONTRACTED_WIDTH ){ // mobile mode
+        if( displayMode != "mobile" ){
+            displayMode = "mobile";
+            
+            $("body").removeClass( "contracted normal" );
+            $("body").addClass( "mobile" );
+            
+        }
+    }else{ // normal mode
+        if( displayMode != "normal" ){
+            displayMode = "normal";
+            
+            $("body").removeClass( "contracted mobile" );
+            $("body").addClass( "normal" );
+        }
+    }
 }
 
 function time() {

@@ -43,6 +43,10 @@ strong{
     color: #FFF;
 }
 
+.mobile .header .rooms-menu{
+    display: block;
+}
+
 .header h4{
     font-weight: bold;
     font-size: 14px;
@@ -63,6 +67,7 @@ strong{
     width: 40px;
     height: 40px;
     padding: 0 0 0 0;
+    background: url(../images/profile_loader.gif) center center no-repeat;
 }
 
 .header .profile .alias{
@@ -71,6 +76,29 @@ strong{
     float: left;
     display: block;
     line-height: 40px;
+}
+
+.header .rooms-menu{
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    display: none;
+}
+
+.header .rooms-menu li{
+    float: left;
+}
+
+.header .rooms-menu a{
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 12px;
+    text-decoration: none;
+    display: block;
+    padding: 8px 15px 8px 15px;
+    color: #fff;
+    border: 1px solid white;
+    margin-right: 10px;
 }
 
 .content{
@@ -84,6 +112,15 @@ strong{
     
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#e0e0e0));
     background: #ebebeb;
+}
+
+.contracted .content,
+.mobile .content{
+    right: 0;
+}
+
+.mobile .content{
+    left: 0;
 }
 
 .content strong{
@@ -151,6 +188,7 @@ strong{
 }
 
 .content .info{
+    line-height: 20px;
     padding: 20px 20px 10px 20px;
 }
 
@@ -165,6 +203,10 @@ strong{
     background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
     padding: 0;
+}
+
+.mobile .input{
+    left: 0;
 }
 
 .input input{
@@ -198,8 +240,12 @@ strong{
     z-index: 4;
 }
 
+.mobile .menu{
+    display: none;
+}
+
 .menu h4{
-text-align: left;
+    text-align: left;
     font-size: 12px;
     line-height: 12px;
     font-weight: bold;
@@ -426,6 +472,11 @@ text-align: left;
 
 .avatars li:first-child{
     /*background: #65a3ff;*/
+}
+
+.contracted .avatars,
+.mobile .avatars{
+    display: none;
 }
 
 .cover{

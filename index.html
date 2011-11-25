@@ -2,17 +2,17 @@
 <html>
 <head>
     <meta charset=utf-8>
+
     <title>Forum</title>
 
 	<link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
 	<link href="style/master.css" rel="stylesheet" type="text/css" />
-
+	
 	<script src="script/lib.js"></script>
 	<script src="script/md5.js"></script>
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	
 	<script src="script/forum.js"></script>
-
 	<script src="script/app.js"></script>
 	
     
@@ -25,56 +25,29 @@
 			<span class="image"><img src="images/profile.jpg" /></span>
 			<span class="alias"><a href="#">Skaggivara</a></span>
 		</div>
+		<ul class="rooms-menu">
+			<li><a href="#" class="rooms-btn">Rooms</a></li>
+			<!--<li><a href="#" class="people-btn">People</a></li>-->
+		</ul>
 	</div>
 	
-
 	<div class="menu">
 		<h4>Rooms</h4>
-		<ul>
-			<!--
-			<li><a href="#"><span class="title">Some cool room</span><span class="count">22</span></a></li>
-			<li class="active"><a href="#"><span class="title">Another really neat room..</span><span class="count">2</span></a></li>
-			<li><a href="#"><span class="title">Cosy neat room..</span><span class="count">12</span></a></li>
-			<li><a href="#"><span class="title">Swell neat room..</span><span class="count">5</span></a></li>-->
-		</ul>
-		
+		<ul></ul>
 		<a class="create-btn" href="#"><span>Create Room</span></a>
-		<!--
-		<a class="join-btn" href="#"><span>Join Room</span></a>
-		<a class="send-btn" href="#"><span>Send message</span></a>-->
 	</div>
 	
 	<div class="content">
 		
-		<p class="info">Welcome to the forum, please pick a room from the left or <a href="#" class="create-btn">create a new one</a>.</p>
+		<p class="info">Welcome to the forum, please pick a room from the left or <a href="#" class="create-btn">create a new one</a>. This application also works on an array of mobile devices and pads, try it out.</p>
 		
-		<ul>
-			<!--<li>
-				<div class="profile"><img src="images/profile.jpg" width="40" height="40"/></div>
-				
-				<div class="msg">
-
-					<div class="body">
-						<h5>Isak Wistrom</h5>
-						<p>Some coool message here, I would like to say that this is really fine and how do we make lol...</p>
-					</div>
-					
-					<span class="arrow"></span>
-					
-				</div>
-			</li>-->
-		</ul>
+		<ul></ul>
 
 	</div>
-
 	
 	<div class="avatars">
 		<h4>People in this room</h4>
-		<ul>
-			<!--<li data-id="1" data-name="John"><img src="images/profile.jpg" /><span>John</span></li>
-			<li data-id="2" data-name="Isak"><img src="images/profile.jpg" /><span>Isak</span></li>
-			<li data-id="3" data-name="Roger"><img src="images/profile.jpg" /><span>Roger</span></li>-->
-		</ul>
+		<ul></ul>
 	</div>
 		
 	<div class="input">
@@ -84,25 +57,33 @@
 	</div>
 
 <div class="cover"></div>
-  <div class="login">
+
+<div class="login">
 	<h4>Pick your nick</h4>
-		<form action="." id="login-form">
+	<form action="." id="login-form">
+		
 		<label for="nick">nickname *</label>
-      <input id="nick" name"nick" class="field" placeholder="enter your nickname">
-<label for="email">e-mail (If you want your <a href="http://gravatar.com">gravatar</a>)</label>
-      <input id="email" name"email" class="field" placeholder="enter your email">
-      <p class="note">* required</p>
+		<input id="nick" name"nick" class="field" placeholder="enter your nickname">
+		
+		<label for="email">e-mail (If you want your <a href="http://gravatar.com">gravatar</a>)</label>
+		<input id="email" name"email" class="field" placeholder="enter your email">
+		
+		<p class="note">* required</p>
+		
 	<button id="enter" type="submit">Enter lobby</button>
 	</form>
-  </div>
+</div>
+
 <div class="create-room">
 	<h4>Create a room</h4>
 	<form action="." id="create-form">
 		<label for="nick">Room name</label>
-      <input id="name" name"name" class="field" placeholder="Enter room name">
-	<button type="submit" class="create">Create</button>
-	<button class="cancel">Cancel</button>
+		<input id="name" name"name" class="field" placeholder="Enter room name" />
+		
+		<button type="submit" class="create">Create</button>
+		<button class="cancel">Cancel</button>
 	</form>
 </div>
 
 </body>
+</html>
