@@ -66,6 +66,8 @@ $(document).ready(function() {
                 var channel = info[0];
                 var title = info[1];
                 
+                console.log('title: '+title);
+                
                 $(".menu").addRoom( channel, title, 0 );
             
             break;
@@ -127,8 +129,9 @@ $(document).ready(function() {
         
         var roomname = $(".create-room #name").val();
         
-        if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ||
-            /^[A-Za-z0-9\_\-]+$/.test(roomname) == false ){
+        // /^[A-Za-z0-9\_\-]+$/.test(roomname) == false
+        
+        if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ){
                 
             console.log('error: room name needs to be between '+ROOM_MIN_LENGTH+' and '+ROOM_MAX_LENGTH+' characters long and no contain no spaces.');
             
@@ -191,9 +194,9 @@ $(document).ready(function() {
       var hash = MD5(email);
 
       //$(".login button").attr("disabled", "disabled");
+      // /^[A-Za-z0-9\_\-]+$/.test(nick) == false
       
-      if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH || 
-          /^[A-Za-z0-9\_\-]+$/.test(nick) == false  ){
+      if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH  ){
           
           console.log('nick not working');
           

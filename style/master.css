@@ -134,6 +134,9 @@ strong{
     word-break: break-all;
     
 }
+.content li strong{
+    font-weight: bold;
+}
 
 .content li .profile{
     position: absolute;

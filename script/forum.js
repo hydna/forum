@@ -65,7 +65,7 @@
       var header = graph[0].split(":");
       var method = header[0];
       var code = header[1];
-      var message = graph[1];
+      var message = graph.slice(1).join(" ");
 
       if (method == "notif") {
         //console.log("notif %s", message);
@@ -224,10 +224,10 @@
       var header = graph[0].split(":");
       var method = header[0];
       var code = header[1];
-      var message = graph[1];
+      var message = graph.slice(1).join(" ");
       var list;
       var details;
-      console.log("Room message: " + message);
+     // console.log("Room message: " + message);
       
       switch (method) {
         case "get_user_list":
