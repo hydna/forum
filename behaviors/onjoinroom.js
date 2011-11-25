@@ -27,7 +27,7 @@ var message             = null;
 // Validate the 'alias' length and that user has typed an alias
 // with letters and digits only.
 if (alias.length > ALIAS_MAX_LENGTH || alias.length < 2 ||
-    /^[A-Za-z0-9\_\-]+$/.test(alias) == false) {
+    /^[A-Za-z0-9\_\-\s]+$/.test(alias) == false) {
   connection.deny("BAD_ALIAS_FORMAT");
 }
 
