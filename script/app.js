@@ -13,10 +13,6 @@ var typingsent              = false;
     
 $(document).ready(function() {
     
-    console.log("in business");
-    
-    // change nick --
-    
     forum.onmessage = function(graph) {
         
       if( graph.message ){
@@ -36,15 +32,12 @@ $(document).ready(function() {
                 if( message.channel == forum.currentChannel() ){
                     
                     $(".content").statusMessage( ["<strong>",message.nick,"</strong> just joined this room."].join("") );
-
+                    
                     var user = {};
                     user[message.id] = message;
                     
                     $('.avatars').updateUserList( user );
                     
-                    
-                }else{
-                    console.log('someone joined another room');
                 }
                 
             break;
@@ -121,6 +114,15 @@ $(document).ready(function() {
       
     });
     
+    $(".message .ok").click( function(event){
+        
+        event.preventDefault();
+        
+        $(".message").hide();
+        $(".cover").hide();
+        
+    } );
+    
     $(".create-room .create").click( function(event){
         
         event.preventDefault();
@@ -150,6 +152,7 @@ $(document).ready(function() {
             joinRoom( channel, function(err, userlist){
                 if( err ){
                     console.log(err);
+                    messagePrompt( "Error", err );
                     return;
                 }
                 
@@ -160,10 +163,8 @@ $(document).ready(function() {
                     $(".content ul").html("");
                     $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                     
-                    $(".header h4").html(["Forum - ",roomname].join(""));
-                    
                 }
-            
+                
                 $("#message-form input").focus();
                 
             });
@@ -246,7 +247,7 @@ $(document).ready(function() {
                 input.val("");
                 
             }else{
-                alert("You need to enter a room before you can start sending messages.");
+                messagePrompt( "Message","You need to enter a room before you can start sending messages." );
             }
         }
     });
@@ -283,6 +284,7 @@ $(document).ready(function() {
             
             if( err ){
                 console.log(err);
+                messagePrompt( "Error", err );
                 return;
             }
             
@@ -292,8 +294,6 @@ $(document).ready(function() {
                 
                 $(".content ul").html("");
                 $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
-                
-                $('.header h4').html(["Forum - ",roomname].join(""));
                 
             }
             
@@ -310,9 +310,14 @@ $(document).ready(function() {
     $(".header .rooms-btn").click( function( event ){
         event.preventDefault();
         
+        if(!$(".menu:visible").length > 0 ){
+           $(".header .rooms-btn").html("Back");
+        }else{
+            $(".header .rooms-btn").html("Rooms");
+        }
+        
         $(".menu").toggle();
         
-        console.log("loool");
         
     });
     
@@ -356,7 +361,7 @@ function joinRoom( id, callback ){
     });
 }
 
-function updateSize(){
+function updateSize(){ // replace with queries?
     
     var w = $(window).width();
     
@@ -367,6 +372,8 @@ function updateSize(){
             
             $("body").removeClass( "normal mobile" );
             $("body").addClass( "contracted" );
+            $(".menu").show();
+
         }
     }else if( w <= MIN_CONTRACTED_WIDTH ){ // mobile mode
         if( displayMode != "mobile" ){
@@ -375,6 +382,8 @@ function updateSize(){
             $("body").removeClass( "contracted normal" );
             $("body").addClass( "mobile" );
             
+            $(".menu").hide();
+      
         }
     }else{ // normal mode
         if( displayMode != "normal" ){
@@ -382,8 +391,21 @@ function updateSize(){
             
             $("body").removeClass( "contracted mobile" );
             $("body").addClass( "normal" );
+            $(".menu").show();
+            
         }
     }
+}
+
+function messagePrompt( title, message, callback ){
+    
+    $(".message h4").html( title );
+    $(".message p").html( message );
+    
+    $(".message").show();
+    
+    $(".cover").show();
+    
 }
 
 function time() {
@@ -451,23 +473,22 @@ $.fn.updateUserList = function( list, remove ){
     });
     
     if( !match ){
-    
+        
         for( var k in list ){
-    
+            
             var id = list[k].id;
             var nick = list[k].nick;
             var hash = list[k].hash;
-
+            
             var item = $(["<li data-id='",id,"' data-name='",nick,"'><img src='",GRAVATAR_URL.replace('%s', hash),"' /><span>",nick,"</span></li>"].join(""));
-
+            
             item.hide();
             item.fadeIn("fast");
-
+            
             $("ul",$(this)).append( item );
-
+            
         }
    }
-    
 }
 
 $.fn.statusMessage = function( message ){
@@ -481,8 +502,7 @@ $.fn.statusMessage = function( message ){
     
     $("ul", $(this)).append( msg );
     
-    // scroll to bottom
-	$(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
+    $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
 }
 
 $.fn.chatMessage = function(nick, message, profile) {
@@ -494,13 +514,11 @@ $.fn.chatMessage = function(nick, message, profile) {
     
     msg.hide();
     msg.fadeIn("fast");
-	
-	$("ul", $(this)).append( msg );
-	
-	// scroll to bottom
-	$(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
-	
-	
+    
+    $("ul", $(this)).append( msg );
+    
+    $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
+    
 };
 
 $.fn.addRoom = function( channel, title, count ) {

@@ -4,7 +4,9 @@
     <meta charset=utf-8>
 
     <title>Forum</title>
-
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=false"/>
+	
 	<link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
 	<link href="style/master.css" rel="stylesheet" type="text/css" />
 	
@@ -31,9 +33,9 @@
 	</div>
 	
 	<div class="menu">
-		<h4>Rooms</h4>
+		<h4><span>Rooms</span><a href="#" class="create-btn"></a></h4>
 		<ul></ul>
-		<a class="create-btn" href="#"><span>Create Room</span></a>
+		<a class="add-btn create-btn" href="#"><span>Create Room</span></a>
 	</div>
 	
 	<div class="content">
@@ -51,7 +53,7 @@
 		
 	<div class="input">
 		<form action="." id="message-form">
-		<input id="message" name="message" placeholder="Your chat message..."/>
+			<input id="message" name="message" placeholder="Your chat message..."/>
 		</form>
 	</div>
 
@@ -62,14 +64,14 @@
 	<form action="." id="login-form">
 		
 		<label for="nick">nickname *</label>
-		<input id="nick" name"nick" class="field" placeholder="enter your nickname">
+		<input id="nick" name="nick" class="field" placeholder="enter your nickname" value="">
 		
 		<label for="email">e-mail (If you want your <a href="http://gravatar.com">gravatar</a>)</label>
-		<input id="email" name"email" class="field" placeholder="enter your email">
+		<input id="email" name="email" class="field" placeholder="enter your email" value="">
 		
 		<p class="note">* required</p>
 		
-	<button id="enter" type="submit">Enter lobby</button>
+		<button id="enter" type="submit" >Enter lobby</button>
 	</form>
 </div>
 
@@ -79,9 +81,15 @@
 		<label for="nick">Room name</label>
 		<input id="name" name"name" class="field" placeholder="Enter room name" />
 		
-		<button type="submit" class="create">Create</button>
-		<button class="cancel">Cancel</button>
+		<button type="submit" class="create standard-btn">Create</button>
+		<button class="cancel standard-btn">Cancel</button>
 	</form>
+</div>
+
+<div class="message">
+	<h4>Some title</h4>
+	<p>Some message..</p>
+	<button class="ok standard-btn">Ok</button>
 </div>
 
 </body>

@@ -66,13 +66,12 @@
       var method = header[0];
       var code = header[1];
       var message = graph.slice(1).join(" ");
-
+      
       if (method == "notif") {
-        //console.log("notif %s", message);
-        if (exports.onnotif) {
-          exports.onnotif(code, message);
-        }
-        return;
+          if (exports.onnotif) {
+              exports.onnotif(code, message);
+          }
+          return;
       }
 
       if (lobbyCallbacks[method]) {
@@ -153,7 +152,7 @@
 
     createRoomChannel(chanid, function(err, channel) {
       if (err) {
-         console.log('error--');
+         //console.log('error--');
         return callback(err);
       }
 
