@@ -66,8 +66,6 @@ $(document).ready(function() {
                 var channel = info[0];
                 var title = info[1];
                 
-                console.log('title: '+title);
-                
                 $(".menu").addRoom( channel, title, 0 );
             
             break;
@@ -308,6 +306,15 @@ $(document).ready(function() {
     $(".cover").click( function(event){
         event.preventDefault();
     } );
+    
+    $(".header .rooms-btn").click( function( event ){
+        event.preventDefault();
+        
+        $(".menu").toggle();
+        
+        console.log("loool");
+        
+    });
     
     
     $(".login #nick").focus();
