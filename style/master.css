@@ -4,10 +4,10 @@
 ------------------------------------------------------------ */
 
 html,body{
+    color: #666;
     font-family: arial, sans-serif;
     font-size: 14px;
     line-height: 18px;
-    color: #666;
     background: #ebebeb;
     height: 100%;
     overflow: hidden;
@@ -25,7 +25,15 @@ strong{
     font-weight: bold;
 }
 
+h4{
+    text-shadow: #000 1px 1px 0;
+}
+
+/* Header 
+------------------------------- */
+
 .header{
+    color: #fff;
     text-align: center;
     position: absolute;
     top: 0;
@@ -35,7 +43,6 @@ strong{
     background: #121212;
     background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
-    color: #FFF;
 }
 
 .mobile .header .rooms-menu{
@@ -98,14 +105,16 @@ strong{
     
     box-shadow:inset 0px 1px 0px 0px #8c8c8c;
     background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4a4a4a),  color-stop(1, #212121) );
-    background:-moz-linear-gradient( center top, #212121 5%, #4a4a4a 100% );
+    background:-moz-linear-gradient( center top, #4a4a4a 5%, #212121 100% );
     
     filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#212121', endColorstr='#4a4a4a');
     
     background-color:#212121;
+    
     -moz-border-radius:15px;
     -webkit-border-radius:15px;
     border-radius:15px;
+    
     border:1px solid #282c30;
     display:inline-block;
     color:#ffffff;
@@ -115,6 +124,9 @@ strong{
     
 }
 
+/* Content, chat messages area 
+------------------------------- */
+
 .content{
     position: absolute;
     padding: 0;
@@ -123,8 +135,6 @@ strong{
     right: 200px;
     left: 240px;
     overflow: auto;
-    
-    /*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#e0e0e0));*/
     background: #ebebeb;
 }
 
@@ -195,8 +205,8 @@ strong{
     -webkit-box-shadow: #999 0 1px 1px 0px;
     -moz-box-shadow: 0 1px 1px 0px #999 ;
     
-    -moz-border-radius:20px;
-    -webkit-border-radius:20px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
     border-radius: 5px;
 }
 
@@ -214,8 +224,11 @@ strong{
 
 .content .info{
     line-height: 20px;
-    padding: 20px 20px 10px 20px;
+    padding: 15px 20px 10px 20px;
 }
+
+/* Input, chat input field
+------------------------------- */
 
 .input{
     line-height: 0;
@@ -247,20 +260,28 @@ strong{
     font-family: arial, sans-serif;
     font-size: 14px;
     height: 28px;
-    /*margin: 6px;*/
+
     display: block;
     background: #fff;
     border: none;
     padding: 0 6px 0 6px;
-    border-radius: 5px;
+
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
     width: 100%;
+    
     -webkit-box-shadow: #999 0 1px 2px 0px inset;
     -moz-box-shadow:inset 0px 1px 2px 0px #999;
+    
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius: 5px;
 }
+
+/* Menu, rooms-list
+------------------------------- */
 
 .menu{
     text-align: center;
@@ -271,8 +292,8 @@ strong{
     left: 0;
     border-right: 1px solid #ccc;
     background: #ebebeb;
-    z-index: 4;
     display: block;
+    z-index: 4;
 }
 
 .mobile .menu{
@@ -282,7 +303,6 @@ strong{
     right: 0;
     display: none;
     border: none;
-    z-index: 4;
 }
 .mobile .menu ul li.active a,
 .mobile .menu ul li a:hover,
@@ -327,7 +347,7 @@ strong{
 .menu ul li a{
     text-align: left;
     position: relative;
-    z-index: 100;
+    /*z-index: 100;*/
     width: 210px;
     font-size: 14px;
     line-height: 14px;
@@ -336,11 +356,13 @@ strong{
     color: #333;
     display: block;
     padding: 12px 15px 12px 15px;
+
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    
     background: #fff;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffffff), to(#eeeeee));
     background: -moz-linear-gradient(100% 100% 90deg, #eeeeee, #ffffff);
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
 }
 
 .menu ul li a .count{
@@ -350,20 +372,22 @@ strong{
     right: 12px;
     font-size: 12px;
     line-height: 12px;
-    border-radius: 10px;
+
     border: 1px solid #ccc;
     padding: 2px 5px 2px 5px;
     float: right;
+    
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius: 10px;
 
 }
 .menu ul li.active a,
 .menu ul li a:hover{
     color: #fff;
-    
     background: #121212 url(../images/menu_arrow.png) right center no-repeat;
     background: url(../images/menu_arrow.png) right center no-repeat, -moz-linear-gradient(100% 100% 90deg, #111, #333);
     background:  url(../images/menu_arrow.png) right center no-repeat, -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
-    
     border-bottom: 1px solid #121212;
     width: 210px;
     border-right: 1px solid #ebebeb;
@@ -388,87 +412,25 @@ strong{
     font-weight: bold;
     display: inline-block;
     padding: 10px 14px 10px 14px;
-    border-radius: 18px;
     border: 1px solid #ccc;
-    background:  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eeeeee));
+    
+    -moz-border-radius:18px;
+    -webkit-border-radius:18px;
+    border-radius: 18px;
+    
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#eeeeee));
     background: -moz-linear-gradient(100% 100% 90deg, #eeeeee, #fff);
     
     -moz-box-shadow: #ccc 0 1px 2px 0px;
     -webkit-box-shadow: #ccc 0 1px 2px 0px;
 }
 
-.create-btn span{
-    background: url(../images/add.png) left center no-repeat;
-    padding: 2px 0 2px 20px;
+.menu .add-btn:hover{
+    border: 1px solid #999;
 }
 
-.create-room,
-.message,
-.login{
-    position: relative;
-    z-index: 10;
-    left: 50%;
-    top: 50%;
-    width: 240px;
-    height: 240px;
-    margin: -135px 0 0 -135px;
-    border-radius: 10px;
-    background: #121212;
-    background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
-    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
-    -webkit-box-shadow: #000 0 1px 5px 0px;
-    -moz-box-shadow: #000 0 1px 5px 0px;
-    padding: 10px 15px 15px 15px;
-}
-.create-room label,
-.login label{
-    display: block;
-    color: #fff;
-    margin: 0 0 5px 0;
-}
-
-.message h4,
-.create-room h4,
-.login h4{
-    font-weight: bold;
-    text-align: center;
-    color: #fff;
-    margin: 0 0 10px 0;
-    text-shadow: #000 -1px -1px 0;
-}
-
-.create-room input,
-.login input{
-    display: block;
-    color: #333;
-    font-family: arial, sans-serif;
-    font-size: 14px;
-    height: 28px;
-    margin: 0 0 10px 0;
-    background: #fff;
-    border: none;
-    padding: 0 6px 0 6px;
-    border-radius: 5px;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 228px;
-    -webkit-box-shadow: #999 0 1px 2px 0px inset;
-    -moz-box-shadow:inset 0px 1px 2px 0px #999;
-}
-
-.login .note{
-    color: #999;
-    font-size: 12px;
-}
-
-.create-room{
-    display: none;
-    height: 140px;
-    margin: -70px 0 0 -135px;
-}
-
+/* Avatars, userlist
+------------------------------- */
 .avatars{
     position: absolute;
     right: 0;
@@ -492,10 +454,13 @@ strong{
 .avatars img{
     display: block;
     float: left;
-    border-radius: 20px;
     width: 40px;
     height: 40px;
     background: url(../images/loader.gif) center center no-repeat;
+    
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    border-radius:20px;
     
 }
 
@@ -527,19 +492,103 @@ strong{
     line-height: 12px;
     font-weight: bold;
     color: #fff;
+    padding: 8px 10px 8px 10px;
+    
     background: #121212;
     background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
-    padding: 8px 10px 8px 10px;
-}
-
-.avatars li:first-child{
-    /*background: #65a3ff;*/
+    
 }
 
 .contracted .avatars,
 .mobile .avatars{
     display: none;
+}
+
+/* Overlays, create, login, message 
+------------------------------- */
+
+.create-btn span{
+    background: url(../images/add.png) left center no-repeat;
+    padding: 2px 0 2px 20px;
+}
+
+.create-room,
+.message,
+.login{
+    position: relative;
+
+    left: 50%;
+    top: 50%;
+    width: 240px;
+    height: 240px;
+    margin: -135px 0 0 -135px;
+
+    -moz-border-radius:10px;
+    -webkit-border-radius:10px;
+    border-radius: 10px;
+    
+    background: #121212;
+    background: -moz-linear-gradient(100% 100% 90deg, #111, #333);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#111));
+    
+    -webkit-box-shadow: #111 0 1px 5px 0px;
+    -moz-box-shadow: #111 0 1px 5px 0px;
+    padding: 10px 15px 15px 15px;
+    
+    z-index: 10;
+}
+.create-room label,
+.login label{
+    display: block;
+    color: #fff;
+    margin: 0 0 5px 0;
+}
+
+.message h4,
+.create-room h4,
+.login h4{
+    font-weight: bold;
+    text-align: center;
+    color: #fff;
+    margin: 0 0 10px 0;
+    text-shadow: #000 -1px -1px 0;
+}
+
+.create-room input,
+.login input{
+    display: block;
+    color: #333;
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    height: 28px;
+    margin: 0 0 10px 0;
+    background: #fff;
+    border: none;
+    padding: 0 6px 0 6px;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 228px;
+    
+    -webkit-box-shadow: #999 0 1px 2px 0px inset;
+    -moz-box-shadow:inset 0px 1px 2px 0px #999;
+    
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+}
+
+.login .note{
+    color: #999;
+    font-size: 12px;
+}
+
+.create-room{
+    display: none;
+    height: 140px;
+    margin: -70px 0 0 -135px;
 }
 
 .cover{
@@ -548,9 +597,8 @@ strong{
     bottom: 0;
     left: 0;
     right: 0;
-    background: black;
-    z-index: 4;
     background: url(../images/cover.png);
+    z-index: 4;
 }
 
 button,
@@ -564,15 +612,19 @@ button,
     font-weight: bold;
     display: inline-block;
     padding: 8px 14px 8px 14px;
-    border-radius: 15px;
     border: none;
-    background: -moz-linear-gradient(100% 100% 90deg, #fff, #ccc);
+    
+    background: -moz-linear-gradient(100% 100% 90deg, #ccc, #fff);
     background:  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ccc));
+    
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
 }
 
 button:hover,
 .standard-btn:hover{
-    background: -moz-linear-gradient(100% 100% 90deg, #ccc, #fff);
+    background: -moz-linear-gradient(100% 100% 90deg, #fff, #ccc);
     background:  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ccc), to(#fff));
 }
 
@@ -582,14 +634,21 @@ button:hover,
     height: 140px;
     margin: -70px 0 0 -135px;
 
-    z-index: 8;
+    z-index: 11;
 }
 
 .message p{
     text-align: left;
     display: block;
     color: #333;
-    background: #fff;
-    border-radius: 5px;
+    
     padding: 10px;
+    
+    background: #fff;
+    background:-moz-linear-gradient( center top, #fff 90%, #ebebeb 100% );
+    background: -webkit-gradient(linear, 0% 90%, 0% 100%, from(#fff), to(#ebebeb));
+    
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
 }

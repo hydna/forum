@@ -10,6 +10,7 @@ var GRAVATAR_URL            = "http://www.gravatar.com/avatar/%s?s=40.jpg";
 
 var displayMode             = "normal"; // normal, contracted, mobile
 var typingsent              = false;
+var currentOverlay          = null;
     
 $(document).ready(function() {
     
@@ -108,9 +109,12 @@ $(document).ready(function() {
     
     $(".create-btn").click(function(event) {
         event.preventDefault();
+        
         $(".cover").show();
         $(".create-room").show();
         $(".create-room #name").focus();
+        
+        currentOverlay = ".create-room";
       
     });
     
@@ -121,6 +125,8 @@ $(document).ready(function() {
         $(".message").hide();
         $(".cover").hide();
         
+        currentOverlay = null;
+        
     } );
     
     $(".create-room .create").click( function(event){
@@ -128,8 +134,6 @@ $(document).ready(function() {
         event.preventDefault();
         
         var roomname = $(".create-room #name").val();
-        
-        // /^[A-Za-z0-9\_\-]+$/.test(roomname) == false
         
         if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ){
                 
@@ -141,7 +145,7 @@ $(document).ready(function() {
         
         forum.createRoom( roomname, function(err, channel) {
             if (err) {
-                console.error(err);
+                messagePrompt( "Error", err );
                 return;
             }
             
@@ -151,7 +155,6 @@ $(document).ready(function() {
             
             joinRoom( channel, function(err, userlist){
                 if( err ){
-                    console.log(err);
                     messagePrompt( "Error", err );
                     return;
                 }
@@ -182,62 +185,55 @@ $(document).ready(function() {
         $(".create-room #name").val("");
         
     } );
-
-
+    
+    
     $(".login #login-form").submit(function(event) {
     
         event.preventDefault();
         
-      var nick = $(".login #nick").val();
-      var email = $(".login #email").val();
-      var hash = MD5(email);
-
-      //$(".login button").attr("disabled", "disabled");
-      // /^[A-Za-z0-9\_\-]+$/.test(nick) == false
-      
-      if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH  ){
+        var nick = $(".login #nick").val();
+        var email = $(".login #email").val();
+        var hash = MD5(email);
+        
+        if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH  ){
+            console.log('nick not working');
           
-          console.log('nick not working');
-          
-          return;
-      }
-
-      forum.joinLobby(nick, hash, function(err) {
-
-        if (err) {
-          alert(err);
-          return;
+            return;
         }
         
-        $(".profile").updateProfile( nick, hash );
+        forum.joinLobby(nick, hash, function(err) {
+            
+            if (err) {
+                messagePrompt( "Error", err );
+                return;
+            }
+            
+            $(".profile").updateProfile( nick, hash );
+            
+            forum.getRoomList(function(err, rooms) {
+                
+                if (err) {
+                    messagePrompt( "Error", err );
+                    return;
+                }
+                
+                for( var i = 0, l = rooms.length; i < l; i++ ){
+                    
+                    $(".menu").addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
+                }
+            
+            });
+            
+            $(".login").hide();
+            $(".cover").hide();
         
-
-        forum.getRoomList(function(err, rooms) {
-
-          if (err) {
-            console.error(err);
-            return;
-          }
-          
-          for( var i = 0, l = rooms.length; i < l; i++ ){
-              
-              $(".menu").addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
-          }
-         
         });
-        //$(".login button").attr("disabled", "");
-
-
-        $(".login").hide();
-        $(".cover").hide();
-        
-      });
     });
-
+    
     $('#message-form').submit(function(event) {
         event.preventDefault();
         var input = $("input", this);
-    
+        
         if (input.val()) {
             
             if( forum.currentChannel() ){
@@ -283,7 +279,6 @@ $(document).ready(function() {
         joinRoom( channel, function(err, userlist){
             
             if( err ){
-                console.log(err);
                 messagePrompt( "Error", err );
                 return;
             }
@@ -305,6 +300,13 @@ $(document).ready(function() {
     
     $(".cover").click( function(event){
         event.preventDefault();
+        
+        if( currentOverlay ){
+            $(currentOverlay).hide();
+            currentOverlay = null;
+            $(this).hide();
+        }
+        
     } );
     
     $(".header .rooms-btn").click( function( event ){
@@ -334,7 +336,6 @@ function joinRoom( id, callback ){
     
     forum.joinRoom(id, function( err, userlist ) {
         if (err) {
-          console.error(err);
           callback( err );
           return;
         }
@@ -361,11 +362,11 @@ function joinRoom( id, callback ){
     });
 }
 
-function updateSize(){ // replace with queries?
+function updateSize(){
     
     var w = $(window).width();
     
-    if( w < MIN_NORMAL_WIDTH && w > MIN_CONTRACTED_WIDTH ){
+    if( w < MIN_NORMAL_WIDTH && w > MIN_CONTRACTED_WIDTH ){ // contracted mode
         
         if( displayMode != "contracted" ){
             displayMode = "contracted";
@@ -373,6 +374,7 @@ function updateSize(){ // replace with queries?
             $("body").removeClass( "normal mobile" );
             $("body").addClass( "contracted" );
             $(".menu").show();
+            $(".header .rooms-btn").html("Rooms");
 
         }
     }else if( w <= MIN_CONTRACTED_WIDTH ){ // mobile mode
@@ -381,7 +383,6 @@ function updateSize(){ // replace with queries?
             
             $("body").removeClass( "contracted normal" );
             $("body").addClass( "mobile" );
-            
             $(".menu").hide();
       
         }
@@ -392,6 +393,7 @@ function updateSize(){ // replace with queries?
             $("body").removeClass( "contracted mobile" );
             $("body").addClass( "normal" );
             $(".menu").show();
+            $(".header .rooms-btn").html("Rooms");
             
         }
     }
@@ -405,6 +407,8 @@ function messagePrompt( title, message, callback ){
     $(".message").show();
     
     $(".cover").show();
+    
+    currentOverlay = ".message";
     
 }
 
@@ -532,15 +536,6 @@ $.fn.addRoom = function( channel, title, count ) {
     
     $("ul", $(this)).append( roomitem );
 
-}
-
-$.fn.errorMessage = function( title, message, callback ) {
-    
-    var status = "ok";
-    
-    if( callback ){
-        callback( status );
-    }
 }
 
 })();
