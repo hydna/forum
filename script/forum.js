@@ -7,16 +7,12 @@
   exports.getUserList     = getUserList;
   exports.postMessage     = postMessage;
   exports.postTyping      = postTyping;
-  exports.currentChannel  = currentChannel;
   exports.onnotif         = null;
   exports.onmessage       = null;
-
-
 
   // Constants
   var ROOT_URL            = "192.168.0.17:7010";
   var LOBBY_CHANNEL       = 1;
-
 
   // variables
   var lobbyChannel        = null;
@@ -24,7 +20,6 @@
   var userNick            = null;
   var userHash            = null;
   var roomChannel         = null;
-  var currentChannel      = null;
   var lobbyCallbacks      = {};
 
 
@@ -152,7 +147,6 @@
 
     createRoomChannel(chanid, function(err, channel) {
       if (err) {
-         //console.log('error--');
         return callback(err);
       }
 
@@ -226,7 +220,6 @@
       var message = graph.slice(1).join(" ");
       var list;
       var details;
-     // console.log("Room message: " + message);
       
       switch (method) {
         case "get_user_list":
@@ -336,7 +329,6 @@
   }
 
   function callRemote(id, args, callback) {
-    //console.log("call remote " + id);
     lobbyChannel.emit(id + (args.length ? " " + args.join(",") : ""));
     lobbyCallbacks[id] = callback;
   }
