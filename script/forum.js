@@ -7,6 +7,7 @@
   exports.getUserList     = getUserList;
   exports.postMessage     = postMessage;
   exports.postTyping      = postTyping;
+  exports.currentChannel  = currentChannel;
   exports.onnotif         = null;
   exports.onmessage       = null;
 
