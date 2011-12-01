@@ -136,8 +136,9 @@ $(document).ready(function() {
         var roomname = $(".create-room #name").val();
         
         if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ){
-                
-            console.log('error: room name needs to be between '+ROOM_MIN_LENGTH+' and '+ROOM_MAX_LENGTH+' characters long and no contain no spaces.');
+            
+            $(".create-room").errorMessage( ["Room name needs to be between", ROOM_MIN_LENGTH, "and", ROOM_MAX_LENGTH, "characters long."].join(" "), $(".create-room #name") );
+            
             
             return;
         }
@@ -196,7 +197,8 @@ $(document).ready(function() {
         var hash = MD5(email);
         
         if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH  ){
-            console.log('nick not working');
+            
+            $(".login").errorMessage(["Nickname needs to be between", NICK_MIN_LENGTH, "and", NICK_MAX_LENGTH,"characters long."].join(" "), $(".login #nick") );
           
             return;
         }
@@ -243,7 +245,7 @@ $(document).ready(function() {
                 input.val("");
                 
             }else{
-                messagePrompt( "Message","You need to enter a room before you can start sending messages." );
+                messagePrompt( "Message", "You need to enter a room before you can start sending messages." );
             }
         }
     });
@@ -537,5 +539,31 @@ $.fn.addRoom = function( channel, title, count ) {
     $("ul", $(this)).append( roomitem );
 
 }
+
+$.fn.errorMessage = function( msg, input ) {
+    
+    var code = "<div class='error-message'><p></p></div>";
+    
+    if( $(".error-message", $(this)).length == 0 ){
+        $(this).append( code );
+    }
+    
+    $(".error-message p", $(this)).html( msg );
+    
+    var input_w = input.width();
+    var input_pos = input.position();
+    var message_w = $(".error-message", $(this)).width();
+    var message_h = $(".error-message", $(this)).height();
+    
+    var x = Math.round( (input_w * .5) - (message_w * .5) ) + input_pos.left;
+    var y = Math.round( input_pos.top - (message_h + 4) );
+    
+    $(".error-message", $(this)).css("left", x );
+    $(".error-message", $(this)).css("top", y );
+    
+    $(".error-message", $(this)).fadeIn("fast").delay(2000).fadeOut("slow");
+
+}
+
 
 })();
