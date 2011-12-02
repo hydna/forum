@@ -550,13 +550,13 @@ $.fn.errorMessage = function( msg, input ) {
     
     $(".error-message p", $(this)).html( msg );
     
-    var input_w = input.width();
+    var input_w = input.outerWidth();
     var input_pos = input.position();
-    var message_w = $(".error-message", $(this)).width();
-    var message_h = $(".error-message", $(this)).height();
+    var message_w = $(".error-message", $(this)).outerWidth();
+    var message_h = $(".error-message", $(this)).outerHeight();
     
     var x = Math.round( (input_w * .5) - (message_w * .5) ) + input_pos.left;
-    var y = Math.round( input_pos.top - (message_h + 4) );
+    var y = Math.round( input_pos.top - (message_h) );
     
     $(".error-message", $(this)).css("left", x );
     $(".error-message", $(this)).css("top", y );
