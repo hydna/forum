@@ -11,17 +11,20 @@ var GRAVATAR_URL            = "http://www.gravatar.com/avatar/%s?s=40.jpg";
 var displayMode             = "normal"; // normal, contracted, mobile
 var typingsent              = false;
 var currentOverlay          = null;
+var sendTimeout             = 100;
+var msgBuffer               = "";
+var currentTimeStamp        = null;
     
 $(document).ready(function() {
     
     forum.onmessage = function(graph) {
         
-      if( graph.message ){
-          $(".content").chatMessage( graph.user.nick, graph.message, graph.user.hash );
-      }else{
-          $(".avatars").typing( graph.user.id );
-      }
-      
+        var msgid = [graph.user.id, "-", graph.time].join("");
+        
+        $(".content").chatMessage( msgid, graph.user.nick, graph.message, graph.user.hash );
+        
+        $(".avatars").typing( graph.user.id );
+        
     };
     
     forum.onnotif = function(code, message){
@@ -240,7 +243,10 @@ $(document).ready(function() {
             
             if( forum.currentChannel() ){
             
-                forum.postMessage( input.val() );
+                forum.postMessage( input.val(), currentTimeStamp );
+                
+                currentTimeStamp = null;
+                msgBuffer = "";
             
                 input.val("");
                 
@@ -250,18 +256,22 @@ $(document).ready(function() {
         }
     });
     
-    $("#message-form input").keydown( function(){
+    $("#message-form input").keyup( function(){
         
-        if( !typingsent ){
-            
-            typingsent = true;
-            
-            forum.postTyping();
-            
-            setTimeout( function(){
-                typingsent = false;
-            }, 1000 );
-            
+        var input = $("#message-form input").val();
+        
+        if( forum.currentChannel() ){
+            if( msgBuffer != input ){
+                
+                if( currentTimeStamp == null ){
+                
+                    currentTimeStamp = new Date().getTime();
+                }
+
+                forum.postMessage( input, currentTimeStamp );
+                
+                msgBuffer = input;
+            }
         }
         
     });
@@ -511,19 +521,37 @@ $.fn.statusMessage = function( message ){
     $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
 }
 
-$.fn.chatMessage = function(nick, message, profile) {
+$.fn.chatMessage = function( id, nick, message, profile) {
     
-    nick = nick.replace(/<([^>]+)>/g,"");
-    message = message.replace(/<([^>]+)>/g,"");
+    if( $(("#"+id), $(this)).length > 0 ){
+        
+        var target = $("#"+id, $(this));
+        
+        if( message.length > 0 ){
+        
+            $("p", target).html( message );
+            $("h5", target).html( [nick," at ",time()].join("") );
+            
+        }else{
+            target.fadeOut( "fast", function(){
+                target.remove();
+            });
+        }
+        
+    }else{
     
-    var msg = $(["<li><div class='profile'><img src='",GRAVATAR_URL.replace('%s', profile),"' width='40' height='40'/></div><div class='msg'><div class='body'><h5>",nick," at ",time(),"</h5><p>",message,"</p></div><span class='arrow'></span></div></li>"].join(""));
+        nick = nick.replace(/<([^>]+)>/g,"");
+        message = message.replace(/<([^>]+)>/g,"");
     
-    msg.hide();
-    msg.fadeIn("fast");
+        var msg = $(["<li id='",id,"'><div class='profile'><img src='",GRAVATAR_URL.replace('%s', profile),"' width='40' height='40'/></div><div class='msg'><div class='body'><h5>",nick," at ",time(),"</h5><p>",message,"</p></div><span class='arrow'></span></div></li>"].join(""));
     
-    $("ul", $(this)).append( msg );
+        msg.hide();
+        msg.fadeIn("fast");
     
-    $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
+        $("ul", $(this)).append( msg );
+    
+        $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
+    }
     
 };
 

@@ -263,22 +263,30 @@
         return;
       }
       
-      if (!chan.users[graph.user]) {
+      var usr = graph.user.split("-");
+      var id = usr[0];
+      var time = usr[1];
+      
+      if (!chan.users[id]) {
         return;
       }
 
       if (exports.onmessage) {
           
-          var msg = { user: chan.users[graph.user] };
+          
+          var msg = {
+              time: time,
+              message: ""
+          };
           
           if( graph.message ){
               msg.message = graph.message; 
           }
-
-          
+        
         exports.onmessage({
-            user: chan.users[graph.user],
-            message: graph.message
+            user: chan.users[id],
+            time: msg.time,
+            message: msg.message
         });
 
       }
@@ -299,15 +307,22 @@
       roomChannel.send(JSON.stringify(graph));
   }
 
-  function postMessage(message) {
+  function postMessage(message, timestamp) {
     var graph;
+    var time = 0;
+    
+    if(timestamp){
+       time = timestamp;
+    }
 
     if (!roomChannel) {
       return;
     }
+    
+    var usr = [ connid, "-", time ].join("");
 
     graph = {
-      user: connid,
+      user: usr,
       message: message
     };
 
