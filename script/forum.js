@@ -12,7 +12,7 @@
   exports.onmessage       = null;
 
   // Constants
-  var ROOT_URL            = "192.168.0.17:7010";
+  var ROOT_URL            = "forum.hydna.net";
   var LOBBY_CHANNEL       = 1;
 
   // variables
