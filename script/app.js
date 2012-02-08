@@ -14,16 +14,18 @@ var currentOverlay          = null;
 var sendTimeout             = 100;
 var msgBuffer               = "";
 var currentTimeStamp        = null;
+
     
 $(document).ready(function() {
+
     
     forum.onmessage = function(graph) {
         
         var msgid = [graph.user.id, "-", graph.time].join("");
         
-        $(".content").chatMessage( msgid, graph.user.nick, graph.message, graph.user.hash );
+        $("#content_id").chatMessage( msgid, graph.user.nick, graph.message, graph.user.hash );
         
-        $(".avatars").typing( graph.user.id );
+        $("#avatars_id").typing( graph.user.id );
         
     };
     
@@ -35,12 +37,12 @@ $(document).ready(function() {
                 
                 if( message.channel == forum.currentChannel() ){
                     
-                    $(".content").statusMessage( ["<strong>",message.nick,"</strong> just joined this room."].join("") );
+                    $("#content_id").statusMessage( ["<strong>",message.nick,"</strong> just joined this room."].join("") );
                     
                     var user = {};
                     user[message.id] = message;
                     
-                    $('.avatars').updateUserList( user );
+                    $('#avatars_id').updateUserList( user );
                     
                 }
                 
@@ -48,12 +50,12 @@ $(document).ready(function() {
             
             case "user-leave": // we know it is our channel?
                 
-                $(".content").statusMessage( ["<strong>",message.nick,"</strong> just left this room."].join("") );
+                $("#content_id").statusMessage( ["<strong>",message.nick,"</strong> just left this room."].join("") );
                 
                 var user = {};
                 user[message.id] = message;
                 
-                $(".avatars").updateUserList( user, true );
+                $("#avatars_id").updateUserList( user, true );
                 
             break;
             
@@ -63,7 +65,7 @@ $(document).ready(function() {
                 var channel = info[0];
                 var title = info[1];
                 
-                $(".menu").addRoom( channel, title, 0 );
+                $("#menu_id").addRoom( channel, title, 0 );
             
             break;
             
@@ -73,7 +75,7 @@ $(document).ready(function() {
                 var channel = info[0];
                 var count = info[1];
                 
-                $(".menu ul li a").each( function(){
+                $("#menu_id ul li a").each( function(){
                     
                     if( $(this).attr("data-channel") == channel ){
                         
@@ -90,7 +92,7 @@ $(document).ready(function() {
             
                 var channel = message;
                 
-                $(".menu ul li a").each( function(){
+                $("#menu_id ul li a").each( function(){
                     
                     if( $(this).attr("data-channel") == channel ){
                         
@@ -113,34 +115,34 @@ $(document).ready(function() {
     $(".create-btn").click(function(event) {
         event.preventDefault();
         
-        $(".cover").show();
-        $(".create-room").show();
-        $(".create-room #name").focus();
+        $("#cover_id").show();
+        $("#create_room_id").show();
+        $("#create_room_name_id").focus();
         
-        currentOverlay = ".create-room";
+        currentOverlay = "#create_room_id";
       
     });
     
-    $(".message .ok").click( function(event){
+    $("#message_id .ok").click( function(event){
         
         event.preventDefault();
         
-        $(".message").hide();
-        $(".cover").hide();
+        $("#message_id ").hide();
+        $("#cover_id").hide();
         
         currentOverlay = null;
         
     } );
     
-    $(".create-room .create").click( function(event){
+    $("#create_room_submit_id").click( function(event){
         
         event.preventDefault();
         
-        var roomname = $(".create-room #name").val();
+        var roomname = $("#create_room_name_id").val();
         
         if( roomname.length < ROOM_MIN_LENGTH || roomname.length > ROOM_MAX_LENGTH ){
             
-            $(".create-room").errorMessage( ["Room name needs to be between", ROOM_MIN_LENGTH, "and", ROOM_MAX_LENGTH, "characters long."].join(" "), $(".create-room #name") );
+            $("#create_room_id").errorMessage( ["Room name needs to be between", ROOM_MIN_LENGTH, "and", ROOM_MAX_LENGTH, "characters long."].join(" "), $("#create_room_name_id") );
             
             
             return;
@@ -153,9 +155,9 @@ $(document).ready(function() {
                 return;
             }
             
-            $(".cover").hide();
-            $(".create-room").hide();
-            $(".create-room #name").val("");
+            $("#cover_id").hide();
+            $("#create_room_id").hide();
+            $("#create_room_name_id").val("");
             
             joinRoom( channel, function(err, userlist){
                 if( err ){
@@ -163,12 +165,12 @@ $(document).ready(function() {
                     return;
                 }
                 
-                $(".content .info").remove();
+                $("#content_id .info").remove();
                 
                 if( userlist ){
                     
-                    $(".content ul").html("");
-                    $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
+                    $("#content_id ul").html("");
+                    $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                     
                 }
                 
@@ -179,41 +181,44 @@ $(document).ready(function() {
         });
     });
     
-    $(".create-room .cancel").click( function(event){
+    $("#create_room_cancel_id").click( function(event){
         
         event.preventDefault();
         
-        $(".cover").hide();
-        $(".create-room").hide();
+        $("#cover_id").hide();
+        $("#create_room_id").hide();
         
-        $(".create-room #name").val("");
+        $("#create_room_name_id").val("");
         
     } );
     
     
-    $(".login #login-form").submit(function(event) {
+    $("#login_form_id").submit(function(event) {
     
         event.preventDefault();
         
-        var nick = $(".login #nick").val();
-        var email = $(".login #email").val();
+        var nick = $("#login_nick_id").val();
+        var email = $("#login_email_id").val().toLowerCase();
         var hash = MD5(email);
         
         if( nick.length > NICK_MAX_LENGTH || nick.length < NICK_MIN_LENGTH  ){
             
-            $(".login").errorMessage(["Nickname needs to be between", NICK_MIN_LENGTH, "and", NICK_MAX_LENGTH,"characters long."].join(" "), $(".login #nick") );
+            $("#login_id").errorMessage(["Nickname needs to be between", NICK_MIN_LENGTH, "and", NICK_MAX_LENGTH,"characters long."].join(" "), $("#login_nick_id") );
           
             return;
         }
+        
+        $("#login_loader_id").show();
         
         forum.joinLobby(nick, hash, function(err) {
             
             if (err) {
                 messagePrompt( "Error", err );
+                $("#login_loader_id").hide();
                 return;
             }
             
-            $(".profile").updateProfile( nick, hash );
+            $("#profile_id").updateProfile( nick, hash );
             
             forum.getRoomList(function(err, rooms) {
                 
@@ -224,18 +229,20 @@ $(document).ready(function() {
                 
                 for( var i = 0, l = rooms.length; i < l; i++ ){
                     
-                    $(".menu").addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
+                    $("#menu_id").addRoom( rooms[i].channel, rooms[i].title, rooms[i].count );
                 }
             
             });
             
-            $(".login").hide();
-            $(".cover").hide();
+            $("#login_loader_id").hide();
+            
+            $("#login_id").hide();
+            $("#cover_id").hide();
         
         });
     });
     
-    $('#message-form').submit(function(event) {
+    $('#message_form_id').submit(function(event) {
         event.preventDefault();
         var input = $("input", this);
         
@@ -256,9 +263,9 @@ $(document).ready(function() {
         }
     });
     
-    $("#message-form input").keyup( function(){
+    $("#message_form_id input").keyup( function(){
         
-        var input = $("#message-form input").val();
+        var input = $("#message_form_id input").val();
         
         if( forum.currentChannel() ){
             if( msgBuffer != input ){
@@ -277,11 +284,11 @@ $(document).ready(function() {
     });
     
     
-    $(".menu ul li a").live( "click", function(event){
+    $("#menu_id ul li a").live( "click", function(event){
         
         event.preventDefault();
         
-        $(".menu ul li").removeClass("active");
+        $("#menu_id ul li").removeClass("active");
         
         $(this).parent().addClass("active");
         
@@ -295,22 +302,29 @@ $(document).ready(function() {
                 return;
             }
             
-            $(".content .info").remove();
+            $("#content_id .info").remove();
             
             if( userlist ){
                 
-                $(".content ul").html("");
-                $(".content").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
+                $("#content_id ul").html("");
+                $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                 
             }
             
-            $("#message-form input").focus();
+            if( displayMode == "mobile" ){
+                $("#header_id .rooms-btn").html("Rooms");
+                $("#menu_id").hide();
+                
+            }else{
+            
+                $("#message-form input").focus();
+            }
             
         } );
         
     } );
     
-    $(".cover").click( function(event){
+    $("#cover_id").click( function(event){
         event.preventDefault();
         
         if( currentOverlay ){
@@ -321,22 +335,22 @@ $(document).ready(function() {
         
     } );
     
-    $(".header .rooms-btn").click( function( event ){
+    $("a.rooms-btn").click( function( event ){
         event.preventDefault();
         
-        if(!$(".menu:visible").length > 0 ){
-           $(".header .rooms-btn").html("Back");
+        if(!$("#menu_id:visible").length > 0 ){
+           $("#header_id .rooms-btn").html("Back");
         }else{
-            $(".header .rooms-btn").html("Rooms");
+           $("#header_id .rooms-btn").html("Rooms");
         }
         
-        $(".menu").toggle();
+        $("#menu_id").toggle();
         
         
     });
     
     
-    $(".login #nick").focus();
+    $("#login_nick_id").focus();
     
     $(window).resize( updateSize );
     
@@ -352,9 +366,9 @@ function joinRoom( id, callback ){
           return;
         }
         
-        $(".menu ul li").removeClass("active");
+        $("#menu_id ul li").removeClass("active");
         
-        $(".menu ul li a").each( function(){
+        $("#menu_id ul li a").each( function(){
             
             if( $(this).attr("data-channel") == forum.currentChannel() ){
                 
@@ -366,8 +380,8 @@ function joinRoom( id, callback ){
         });
         
         if( userlist ){
-            $(".avatars ul li").remove();
-            $(".avatars").updateUserList( userlist );
+            $("#avatars_id ul li").remove();
+            $("#avatars_id").updateUserList( userlist );
         }
         
         callback( null, userlist );
@@ -385,8 +399,9 @@ function updateSize(){
             
             $("body").removeClass( "normal mobile" );
             $("body").addClass( "contracted" );
-            $(".menu").show();
-            $(".header .rooms-btn").html("Rooms");
+            
+            $("#menu_id").show();
+            $("#header_id .rooms-btn").html("Rooms");
 
         }
     }else if( w <= MIN_CONTRACTED_WIDTH ){ // mobile mode
@@ -395,7 +410,8 @@ function updateSize(){
             
             $("body").removeClass( "contracted normal" );
             $("body").addClass( "mobile" );
-            $(".menu").hide();
+            
+            $("#menu_id").hide();
       
         }
     }else{ // normal mode
@@ -404,8 +420,9 @@ function updateSize(){
             
             $("body").removeClass( "contracted mobile" );
             $("body").addClass( "normal" );
-            $(".menu").show();
-            $(".header .rooms-btn").html("Rooms");
+            
+            $("#menu_id").show();
+            $("#header_id .rooms-btn").html("Rooms");
             
         }
     }
@@ -413,14 +430,16 @@ function updateSize(){
 
 function messagePrompt( title, message, callback ){
     
-    $(".message h4").html( title );
-    $(".message p").html( message );
+    var msgcontainer = $("#message_id");
     
-    $(".message").show();
+    $("h4", msgcontainer ).html( title );
+    $("p", msgcontainer).html( message );
     
-    $(".cover").show();
+    msgcontainer.show();
     
-    currentOverlay = ".message";
+    $("#cover_id").show();
+    
+    currentOverlay = "#message_id";
     
 }
 
@@ -572,7 +591,9 @@ $.fn.errorMessage = function( msg, input ) {
     
     var code = "<div class='error-message'><p></p></div>";
     
-    if( $(".error-message", $(this)).length == 0 ){
+    var error_msg = $(".error-message", $(this)); 
+    
+    if( error_msg.length == 0 ){
         $(this).append( code );
     }
     
@@ -580,16 +601,16 @@ $.fn.errorMessage = function( msg, input ) {
     
     var input_w = input.outerWidth();
     var input_pos = input.position();
-    var message_w = $(".error-message", $(this)).outerWidth();
-    var message_h = $(".error-message", $(this)).outerHeight();
+    var message_w = error_msg.outerWidth();
+    var message_h = error_msg.outerHeight();
     
     var x = Math.round( (input_w * .5) - (message_w * .5) ) + input_pos.left;
     var y = Math.round( input_pos.top - (message_h) );
     
-    $(".error-message", $(this)).css("left", x );
-    $(".error-message", $(this)).css("top", y );
+    error_msg.css("left", x );
+    error_msg.css("top", y );
     
-    $(".error-message", $(this)).fadeIn("fast").delay(2000).fadeOut("slow");
+    error_msg.fadeIn("fast").delay(2000).fadeOut("slow");
 
 }
 

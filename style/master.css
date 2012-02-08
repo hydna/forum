@@ -136,6 +136,9 @@ h4{
     left: 240px;
     overflow: auto;
     background: #ebebeb;
+    
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .contracted .content,
@@ -156,6 +159,9 @@ h4{
     clear: both;
     margin: 15px 20px 15px 20px;
     word-break: break-all;
+    
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
     
 }
 .content li strong{
@@ -583,6 +589,16 @@ h4{
 .login .note{
     color: #999;
     font-size: 12px;
+}
+
+.login .loader{
+    float: right;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url(../images/login_loader.gif) center center no-repeat;
+    margin-top: 20px;
+    display: none;
 }
 
 .create-room{
