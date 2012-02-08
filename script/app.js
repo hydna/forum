@@ -258,7 +258,7 @@ $(document).ready(function() {
                 input.val("");
                 
             }else{
-                messagePrompt( "Message", "You need to enter a room before you can start sending messages." );
+                messagePrompt( "Just so you know", "You need to enter a room before you can start sending messages." );
             }
         }
     });
