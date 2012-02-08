@@ -147,7 +147,7 @@ $(document).ready(function() {
             
             return;
         }
-        
+       
         
         forum.createRoom( roomname, function(err, channel) {
             if (err) {
@@ -256,6 +256,8 @@ $(document).ready(function() {
                 msgBuffer = "";
             
                 input.val("");
+                
+                input.blur();
                 
             }else{
                 messagePrompt( "Just so you know", "You need to enter a room before you can start sending messages." );

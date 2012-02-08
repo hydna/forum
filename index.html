@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset=utf-8>
+    <meta charset="utf-8">
 
     <title>Forum</title>
 	
@@ -9,7 +9,12 @@
 	<meta name="apple-mobile-web-app-capable" content="yes" /> 
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	
+	<link rel="apple-touch-icon" href="images/app-icon-57x57.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="images/app-icon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="images/app-icon-114x114.png" />
+	
 	<link href="style/master.css" rel="stylesheet" type="text/css" />
+	<link href="style/add2home-min.css" rel="stylesheet" type="text/css">
 
 	<script src="http://cdn.hydna.com/1/hydna.js"></script>
 	<script src="script/md5-min.js"></script>
@@ -18,6 +23,19 @@
 	<script src="script/JSON2-min.js"></script>     
 	<script src="script/forum.js"></script>
 	<script src="script/app.js"></script>
+	
+	<script src="script/add2home-min.js"></script>
+	
+	<script type="text/javascript">
+	var addToHomeConfig = {
+		animationIn: 'bubble',
+		animationOut: 'bubble',
+		lifespan:10000,
+		expire:2,
+		touchIcon:true,
+		message:'This is a custom message. Your device is an <strong>%device</strong>. The action icon is `%icon`.'
+	};
+	</script> 
 	
     
 </head>
