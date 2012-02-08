@@ -127,7 +127,7 @@ $(document).ready(function() {
         
         event.preventDefault();
         
-        $("#message_id ").hide();
+        $("#message_id").hide();
         $("#cover_id").hide();
         
         currentOverlay = null;
@@ -244,7 +244,7 @@ $(document).ready(function() {
     
     $('#message_form_id').submit(function(event) {
         event.preventDefault();
-        var input = $("input", this);
+        var input = $("#message_input_id");
         
         if (input.val()) {
             
@@ -338,13 +338,16 @@ $(document).ready(function() {
     $("a.rooms-btn").click( function( event ){
         event.preventDefault();
         
-        if(!$("#menu_id:visible").length > 0 ){
-           $("#header_id .rooms-btn").html("Back");
-        }else{
-           $("#header_id .rooms-btn").html("Rooms");
-        }
+        if( displayMode == "mobile" ){
         
-        $("#menu_id").toggle();
+            if(!$("#menu_id:visible").length > 0 ){
+               $("#header_id .rooms-btn").html("Back");
+            }else{
+               $("#header_id .rooms-btn").html("Rooms");
+            }
+        
+            $("#menu_id").toggle();  
+        }
         
         
     });
@@ -433,7 +436,7 @@ function messagePrompt( title, message, callback ){
     var msgcontainer = $("#message_id");
     
     $("h4", msgcontainer ).html( title );
-    $("p", msgcontainer).html( message );
+    $("p", msgcontainer ).html( message );
     
     msgcontainer.show();
     
