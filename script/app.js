@@ -14,8 +14,15 @@ var currentOverlay          = null;
 var sendTimeout             = 100;
 var msgBuffer               = "";
 var currentTimeStamp        = null;
+var scroller                = null;
 
+$(window).load( function(){
     
+    scroller = new iScroll('content_id', { hScrollbar: false, vScrollbar: true } );
+    
+});
+
+
 $(document).ready(function() {
 
     
@@ -26,6 +33,8 @@ $(document).ready(function() {
         $("#content_id").chatMessage( msgid, graph.user.nick, graph.message, graph.user.hash );
         
         $("#avatars_id").typing( graph.user.id );
+        
+        scroller.refresh();
         
     };
     
@@ -44,6 +53,8 @@ $(document).ready(function() {
                     
                     $('#avatars_id').updateUserList( user );
                     
+                    scroller.refresh();
+                    
                 }
                 
             break;
@@ -56,6 +67,8 @@ $(document).ready(function() {
                 user[message.id] = message;
                 
                 $("#avatars_id").updateUserList( user, true );
+                
+                scroller.refresh(); 
                 
             break;
             
@@ -171,6 +184,8 @@ $(document).ready(function() {
                     
                     $("#content_id ul").html("");
                     $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
+                    
+                    scroller.refresh();
                     
                 }
                 
@@ -310,6 +325,8 @@ $(document).ready(function() {
                 
                 $("#content_id ul").html("");
                 $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
+                
+                scroller.refresh();
                 
             }
             
@@ -541,8 +558,6 @@ $.fn.statusMessage = function( message ){
     msg.fadeIn("fast");
     
     $("ul", $(this)).append( msg );
-    
-    $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
 }
 
 $.fn.chatMessage = function( id, nick, message, profile) {
@@ -574,7 +589,6 @@ $.fn.chatMessage = function( id, nick, message, profile) {
     
         $("ul", $(this)).append( msg );
     
-        $(this).animate( { scrollTop: $(this).prop("scrollHeight") }, 100);
     }
     
 };

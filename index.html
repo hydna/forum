@@ -18,6 +18,7 @@
 
 	<script src="http://cdn.hydna.com/1/hydna.js"></script>
 	<script src="script/md5-min.js"></script>
+	<script src="script/iscroll-min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	
 	<script src="script/JSON2-min.js"></script>     
@@ -27,14 +28,16 @@
 	<script src="script/add2home-min.js"></script>
 	
 	<script type="text/javascript">
-	var addToHomeConfig = {
-		animationIn: 'bubble',
-		animationOut: 'bubble',
-		lifespan:10000,
-		expire:2,
-		touchIcon:true,
-		message:'This is a custom message. Your device is an <strong>%device</strong>. The action icon is `%icon`.'
-	};
+		var addToHomeConfig = {
+			animationIn: 'bubble',
+			animationOut: 'bubble',
+			lifespan:10000,
+			expire:2,
+			touchIcon:true
+		};
+		
+		// options
+		   
 	</script> 
 	
     
@@ -60,9 +63,13 @@
 	
 	<div class="content" id="content_id">
 		
+		<div id="scroller">
+		
 		<p class="info">Welcome to the forum, please <a href="#" class="rooms-btn">pick a room</a> from the left or <a href="#" class="create-btn">create a new one</a>. This application also works on an array of mobile devices and pads, try it out.</p>
 		
 		<ul></ul>
+		
+		</div>
 
 	</div>
 	
