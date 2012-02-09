@@ -526,7 +526,7 @@ h4{
 .create-room,
 .message,
 .login{
-    position: relative;
+    position: absolute;
 
     left: 50%;
     top: 50%;
@@ -652,7 +652,7 @@ button:hover,
     display: none;
     text-align: center;
     height: 140px;
-    margin: -70px 0 0 -135px;
+    margin: -80px 0 0 -135px;
 
     z-index: 11;
 }
