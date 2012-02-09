@@ -12,9 +12,9 @@ A chat forum with rooms. Uses [gravatar](http://gravatar.com/) for profile image
 ##Forum##
 
 ###What is it?###
-Forum is an HTML and Javascript chat app with rooms. It uses Gravatar to provide users with a friendly avatar. It’s all static assets and some hydna [hydna.com/documentation/behaviors/introduction/](behaviors), just create a [https://www.hydna.com/account/signup/](hydna account), upload the behavior files and you are in business. It also works on IOS devices. 
+Forum is an HTML and Javascript chat app with rooms. It uses Gravatar to provide users with a friendly avatar. It’s all static assets and some hydna [behaviors](http://hydna.com/documentation/behaviors/introduction/), just create a [hydna account](https://www.hydna.com/account/signup/), upload the behavior files and you are in business. It also works on IOS devices. 
 
-[hydna.github.com/forum](Try it out)  
+[Try it out](hydna.github.com/forum)  
 
 ###Highlights###
 
@@ -149,16 +149,16 @@ In the app
 
 ###Gravatar###
 
-For avatars we use gravatar, just have “http://www.gravatar.com/avatar/youremail?s=40.jpg”, simple, not very secure but for this demo it’s a nice touch.
+For avatars we use gravatar, just have **“http://www.gravatar.com/avatar/youremail?s=40.jpg”**, simple, not very secure but for this demo it’s a nice touch.
 
 ###Mobile enabled###
 
-Some final touches with [http://cubiq.org/iscroll-4](iScroll) and [http://cubiq.org/add-to-home-screen](add2home) and we are setup to support IOS devices.
+Some final touches with [iScroll](http://cubiq.org/iscroll-4) and [add2home](http://cubiq.org/add-to-home-screen) and we are setup to support IOS devices.
 
 ###Benifits###
 
 * All client side, no server functionality needed beyond serving the files.
-* Mobile ready, works as it is on an array of mobiles devices as a web app, deploy through [http://phonegap.com/](PhoneGap) to make it into a native app.
-* Scale your app as needed, follow usage on your [hydna account page](https://www.hydna.com/account/login/).
+* Mobile ready, works as it is on an array of mobiles devices as a web app, deploy through [PhoneGap](http://phonegap.com/) to make it into a native app.
+* Scale your app as needed, follow usage on your [https://www.hydna.com/account/login/](hydna account page).
 
 We hope this gives a nice introduction to hydna and the power of behaviors, you don't need to use behaviors but as you can see they can be quite powerful. You can of course use our behaviors as a base for you next project, a multiplayer game with room-division perhaps?
