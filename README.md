@@ -10,6 +10,8 @@ A chat forum with rooms. Uses [gravatar](http://gravatar.com/) for profile image
 
 ##Forum##
 
+![Forum running on Iphone](http://www.skaggivara.com/drop/forum_iphone.png)
+
 ###What is it?###
 Forum is an HTML and Javascript chat app with rooms. It’s all static assets and some hydna [behaviors](http://hydna.com/documentation/behaviors/introduction/), just create a [hydna account](https://www.hydna.com/account/signup/), upload the behavior files and you are in business. It also works on IOS devices. 
 
@@ -275,7 +277,6 @@ On open on the LOBBY_CHANNEL we invoke **onhandshake.js** where we get the **con
 	    	deny("CHANNEL_MUST_BE_OPENED_IN_RWE_MODE")
 	  	end
 	  	}
-
 	end  
 
 
