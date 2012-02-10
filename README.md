@@ -125,7 +125,7 @@ On the emit directive we look at the user provided token to see what they want t
 
 	directive = "emit"
 		channel = LOBBY_CHANNEL
-
+		
 	    	token = match("^create_room")
 	      		run("forum:api_create_room")
 	    	end
@@ -135,7 +135,7 @@ On the emit directive we look at the user provided token to see what they want t
 	    	end
 		end
 		
-		....
+	....
 
 
 **-- api_create_rooms.js (behaviors)**
@@ -266,7 +266,6 @@ On open on the LOBBY_CHANNEL we invoke **onhandshake.js** where we get the **con
 	        end
 	    	deny("CHANNEL_MUST_BE_OPENED_WITH_EMIT_ONLY")
 	  	end
-
 
 	  	for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
 	  	channel = (ROOM + ROOM_OFFSET)
