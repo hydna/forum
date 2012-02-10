@@ -8,7 +8,6 @@ A chat forum with rooms. Uses [gravatar](http://gravatar.com/) for profile image
 2. Enter your resulting details in **forum.js** (**ROOT_URL**).
 3. Upload the behavior files and start chatting.
 
-
 ##Forum##
 
 ###What is it?###
@@ -33,7 +32,7 @@ What makes the forum app more than just the most basic chat app, is the feature 
 - api_get_rooms.js
 - api_create_rooms.js
 
-In **setup.be** we create a cache to hold our rooms and for each room we also create a cache to hold each rooms users. In this demo we have a maximum of 20 rooms with 20 users each, this can of course be changed with the appropriate hydna account settings.
+In **setup.be** we create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold our rooms and for each room we also create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold each rooms users. In this demo we have a maximum of 20 rooms with 20 users each, this can of course be changed with the appropriate hydna account settings.
 
 **-setup.be**
 
@@ -64,7 +63,7 @@ In **setup.be** we create a cache to hold our rooms and for each room we also cr
 
 In this application we have lobby channel and a channel for each room. If the user connects on the lobby channel they are only allowed to emit signals, see the lobby channel as a kind of entry point to create rooms or get a list of available rooms.
 
-On the emit directive we look at the user provided token to see what they want to happen, in this case we have two options, **create_room** and **get_rooms** , this invoke **api_create_room.js** and **api_get_rooms.js** scripts respectively.
+On the emit directive we look at the user provided token to see what they want to happen, in this case we have two options, **create_room** and **get_rooms** , these invoke **api_create_room.js** and **api_get_rooms.js** scripts respectively.
 
 **-setup.be**
 
@@ -151,16 +150,15 @@ On close we remove the user from the room and also checks if this was the last u
 	}
 	
 	....
-	    
 
-As you can see signals play a large part in notifying users of changes and also invoking functionality in behaviors, like returning a list of users. This way you can achieve quite a alot without needing to have your own server setup.
 
-If you want forum to run on your domain you need to upload the behaviors your domain, see our great [tool for this](https://www.hydna.com/documentation/reference/cli/), or use the upload tool on your account page.   
+As you can see signals play a large part in notifying users of changes and also invoking functionality in behaviors, like returning a list of users. This way you can achieve quite a a lot without needing to have your own server setup.
 
+If you want forum to run on your domain you need to upload the behaviors to your hydna domain, see convenient [tool for this](https://www.hydna.com/documentation/reference/cli/), or use the upload tool on your account page.
 
 ###Gravatar###
 
-For avatars we use gravatar, just have **“http://www.gravatar.com/avatar/youremail?s=40.jpg”**, simple, not very secure but for this demo it’s a nice touch.
+For avatars we use [gravatar](http://en.gravatar.com/), just have **“http://www.gravatar.com/avatar/youremail?s=40.jpg”**, simple, not very secure but for this demo it’s a nice touch.
 
 ###Mobile enabled###
 

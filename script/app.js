@@ -15,10 +15,29 @@ var sendTimeout             = 100;
 var msgBuffer               = "";
 var currentTimeStamp        = null;
 var scroller                = null;
+var allowedToSnap           = true;
+var allowTimeout            = null;
+var currentScrolldiff       = 0;
 
 $(window).load( function(){
     
-    scroller = new iScroll('content_id', { hScrollbar: false, vScrollbar: true } );
+    scroller = new iScroll('content_id', { 
+        hScrollbar: false, 
+        vScrollbar: true,
+        onScrollStart : function(){
+            allowedToSnap = false;
+        },
+        
+        onScrollEnd : function(){
+            
+            clearTimeout( allowTimeout );
+            
+            allowTimeout = setTimeout( function(){
+                allowedToSnap = true;
+            }, 500 );                
+            
+        }
+    });
     
 });
 
@@ -35,6 +54,7 @@ $(document).ready(function() {
         $("#avatars_id").typing( graph.user.id );
         
         scroller.refresh();
+        scrollToBottom();
         
     };
     
@@ -54,6 +74,7 @@ $(document).ready(function() {
                     $('#avatars_id').updateUserList( user );
                     
                     scroller.refresh();
+                    scrollToBottom();
                     
                 }
                 
@@ -68,7 +89,8 @@ $(document).ready(function() {
                 
                 $("#avatars_id").updateUserList( user, true );
                 
-                scroller.refresh(); 
+                scroller.refresh();
+                scrollToBottom();
                 
             break;
             
@@ -191,6 +213,7 @@ $(document).ready(function() {
                     }
                     
                     scroller.refresh();
+                    scrollToBottom();
                 }
                 
                 $("#message-form input").focus();
@@ -331,6 +354,7 @@ $(document).ready(function() {
                 $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                 
                 scroller.refresh();
+                scrollToBottom();
                 
             }
             
@@ -451,6 +475,21 @@ function updateSize(){
             $("#menu_id").show();
             $("#header_id .rooms-btn").html("Rooms");
             
+        }
+    }
+}
+
+function scrollToBottom(){
+    
+    if( allowedToSnap ){
+        
+        var contentheight = $("#scroller").outerHeight();
+        var containerheight = $("#content_id").outerHeight();
+        
+        var diff = contentheight - containerheight;
+        
+        if( diff > 0 && currentScrolldiff != diff ){
+            scroller.scrollTo(0, -diff, 200);
         }
     }
 }
