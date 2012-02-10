@@ -185,8 +185,12 @@ $(document).ready(function() {
                     $("#content_id ul").html("");
                     $("#content_id").statusMessage(["You joined the room <strong>",roomname,"</strong>."].join("") );
                     
-                    scroller.refresh();
+                    if( displayMode == "mobile" ){
+                        $("#header_id .rooms-btn").html("Rooms");
+                        $("#menu_id").hide();
+                    }
                     
+                    scroller.refresh();
                 }
                 
                 $("#message-form input").focus();
@@ -235,7 +239,7 @@ $(document).ready(function() {
             
             $("#profile_id").updateProfile( nick, hash );
             
-            forum.getRoomList(function(err, rooms) {
+            forum.getRoomList(function(err, rooms){
                 
                 if (err) {
                     messagePrompt( "Error", err );
@@ -263,7 +267,7 @@ $(document).ready(function() {
         
         if (input.val()) {
             
-            if( forum.currentChannel() ){
+            if( forum.currentChannel() ) {
             
                 forum.postMessage( input.val(), currentTimeStamp );
                 
@@ -331,6 +335,7 @@ $(document).ready(function() {
             }
             
             if( displayMode == "mobile" ){
+                
                 $("#header_id .rooms-btn").html("Rooms");
                 $("#menu_id").hide();
                 
