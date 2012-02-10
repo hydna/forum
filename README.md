@@ -13,7 +13,7 @@ A chat forum with rooms. Uses [gravatar](http://gravatar.com/) for profile image
 ###What is it?###
 Forum is an HTML and Javascript chat app with rooms. It’s all static assets and some hydna [behaviors](http://hydna.com/documentation/behaviors/introduction/), just create a [hydna account](https://www.hydna.com/account/signup/), upload the behavior files and you are in business. It also works on IOS devices. 
 
-[Try it out](hydna.github.com/forum)  
+[Try it out](http://hydna.github.com/forum)  
 
 ###Highlights###
 
@@ -34,7 +34,7 @@ What makes the forum app more than just the most basic chat app, is the feature 
 
 In **setup.be** we create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold our rooms and for each room we also create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold each rooms users. In this demo we have a maximum of 20 rooms with 20 users each, this can of course be changed with the appropriate hydna account settings.
 
-**-setup.be**
+**-- setup.be (behaviors)**
 
 	namespace = "forum"
 	
@@ -61,11 +61,67 @@ In **setup.be** we create a [cache](https://www.hydna.com/documentation/behavior
 		.... 
 
 
-In this application we have lobby channel and a channel for each room. If the user connects on the lobby channel they are only allowed to emit signals, see the lobby channel as a kind of entry point to create rooms or get a list of available rooms.
+In this application we have LOBBY_CHANNEL and a channel for each room. If the user connects on the LOBBY_CHANNEL they are only allowed to emit signals, see the LOBBY_CHANNEL as a kind of entry point to create rooms or get a list of available rooms. In **forum.js** we have most of the client side hydna logic.
+
+We start by connecting to the LOBBY_CHANNEL in emit mode only.
+
+**-- forum.js** 
+    
+	....
+
+	lobbyChannel = new HydnaChannel(ROOT_URL + "/" + LOBBY_CHANNEL, "emit");
+
+	function cleanup(err) {
+		lobbyChannel.onerror = null;
+	  	lobbyChannel.onclose = null;
+	  	if (err) {
+	    	lobbyChannel = null;
+	  	}
+	};
+
+	lobbyChannel.onopen = function(event) {
+		cleanup();
+	  	connid = event.message;
+	  	return callback(null, connid);
+	};
+
+	lobbyChannel.onerror = function(event) {
+	  	cleanup(true);
+	  	return callback(event.message);
+	};
+
+	lobbyChannel.onclose = function(event) {
+	  	cleanup(true);
+	  	return callback(event.message);
+	};
+
+	lobbyChannel.onsignal = function(event) {
+		var message = event.message;
+	  	var graph = message.split(" ");
+	  	var header = graph[0].split(":");
+	  	var method = header[0];
+	  	var code = header[1];
+	  	var message = graph.slice(1).join(" ");
+  
+	  	if (method == "notif") {
+	    	if (exports.onnotif) {
+	        	exports.onnotif(code, message);
+	      	}
+	      	return;
+	  	}
+
+	  	if (lobbyCallbacks[method]) {
+	    	lobbyCallbacks[method](code, message);
+	    	delete lobbyCallbacks[method];
+	  	}
+	};
+	
+	....
+	
 
 On the emit directive we look at the user provided token to see what they want to happen, in this case we have two options, **create_room** and **get_rooms** , these invoke **api_create_room.js** and **api_get_rooms.js** scripts respectively.
 
-**-setup.be**
+**-- setup.be (behaviors)**
 
 	directive = "emit"
 		channel = LOBBY_CHANNEL
@@ -82,9 +138,126 @@ On the emit directive we look at the user provided token to see what they want t
 		....
 
 
-On open on the lobby channel we invoke **onhandshake.js** where we get the **connectionid** for the user and allow the connection. If the user is connecting to a room channel we try to allocate a place for them in the room cache. If the allocation is successful we notify all the other users in that room of their new friend, and allow the connection.
+**-- api_create_rooms.js (behaviors)**
+    
+	....
+	
+	// Send back the channel id of the new room.
+	message = "create_room:ok " + (CHANNEL_OFFSET + slotid);
+	signal.reply(message);
 
-**-setup.be**
+	// Also send a notification to all other connected user. They
+	// should be aware that the new room exists
+	message = "notif:room-created " + [(CHANNEL_OFFSET + slotid), title].join(",");
+	signal.emitChannel(LOBBY_CHANNEL, message);
+	
+	....
+	
+	
+**-- api_get_rooms.js (behaviors)**
+    
+	....
+	
+	result = [];
+	all = rooms.findall();
+
+	for (var i = 0, l = all.length; i < l; i++) {
+	  slotid = all[i];
+	  title = rooms.find(slotid);
+	  room = resource.load("forum:room" + slotid);
+	  result.push([ROOM_OFFSET + slotid, title, room.count()].join(","))
+	}
+	
+	signal.reply("get_rooms:ok " + result.join(";"));
+	
+	....
+
+Once we have a room list or created a room we can proceed to enter one.
+
+**-- forum.js** 
+    
+	....
+
+	function createRoomChannel(chanid, callback) {
+		var url = ROOT_URL + "/" + chanid + "?" + [userNick, userHash].join(",");
+	    var chan = new HydnaChannel(url, "rwe");
+
+	    function cleanup() {
+	    	chan.onopen = null;
+	    	chan.onerror = null;
+	    	chan.onclose = null;
+	    }
+
+	    chan.users = {};
+
+	    chan.onopen = function() {
+	    	chan.users[connid] = {
+	        	id: chanid,
+	        	nick: userNick,
+	        	hash: userHash
+	      	};
+	      	cleanup();
+	      	callback(null, chan);
+	    };
+
+	    chan.onerror = function(event) {
+	    	cleanup();
+	      	callback(new Error(event.message));
+	    };
+
+	    chan.onclose = function(event) {
+	    	cleanup();
+	      	callback(new Error(event.message || "disconnected"));
+	    };
+
+	    chan.onsignal = function(event) {
+	    	var message = event.message;
+	    	var graph = message.split(" ");
+	    	var header = graph[0].split(":");
+	    	var method = header[0];
+	    	var code = header[1];
+	    	var message = graph.slice(1).join(" ");
+	    	var list;
+	    	var details;
+      
+	    	switch (method) {
+	        	case "get_user_list":
+	          		list = message.split(";");
+	          		for (var i = 0, l = list.length; i < l; i++) {
+	            		details = getUserDetails(list[i]);
+	            		chan.users[details.id] = details;
+	          		}
+	          		if (chan.userlistCallback) {
+	            		chan.userlistCallback(null, chan.users);
+	            		chan.userlistCallback = null;
+	          		}
+	          		break;
+	        	
+				case "notif":
+	          		switch (code) {
+	            		case "user-join":
+	              			details = getUserDetails(message);
+	              			details.channel = chan.id;
+	              			chan.users[details.id] = details;
+	              			invokeNotif("user-join", details);
+	              			break;
+	            		case "user-leave":
+	              			details = chan.users[message];
+	              			if (details) {
+	                			delete chan.users[message];
+	                			invokeNotif("user-leave", details);
+	              			}
+	              			break;
+	          		}
+	          		break;
+	      		}
+	    	};
+	
+	....
+
+On open on the LOBBY_CHANNEL we invoke **onhandshake.js** where we get the **connectionid** for the user and allow the connection. If the user is connecting to a room channel we try to allocate a place for them in the room cache. If the allocation is successful we notify all the other users in that room of their new friend, and allow the connection.
+
+**-- setup.be (behaviors)**
 
 	directive = "open"
 		channel = LOBBY_CHANNEL
@@ -107,9 +280,9 @@ On open on the lobby channel we invoke **onhandshake.js** where we get the **con
 	end  
 
 
-On close we remove the user from the room and also checks if this was the last user in this room we remove the room and notify on the lobby channel what happened, if this is not the last user we notify the other users in the room what user just left.
+On close we remove the user from the room and also checks if this was the last user in this room we remove the room and notify on the LOBBY_CHANNEL what happened, if this is not the last user we notify the other users in the room what user just left.
 
-**-setup.be**
+**-- setup.be (behaviors)**
 
 	directive = "close"
 		for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
@@ -119,7 +292,7 @@ On close we remove the user from the room and also checks if this was the last u
 	  	}
 	end  
 
-**-onleaveroom.js**
+**-- onleaveroom.js (behaviors)**
 
 	// Find the slotid of connection
 	slotid = room.find(new RegExp("^" + connid));
@@ -151,10 +324,9 @@ On close we remove the user from the room and also checks if this was the last u
 	
 	....
 
-
 As you can see signals play a large part in notifying users of changes and also invoking functionality in behaviors, like returning a list of users. This way you can achieve quite a a lot without needing to have your own server setup.
 
-If you want forum to run on your domain you need to upload the behaviors to your hydna domain, see convenient [tool for this](https://www.hydna.com/documentation/reference/cli/), or use the upload tool on your account page.
+If you want forum to run on your domain you need to upload the behaviors to your hydna domain, see our convenient [tool for this](https://www.hydna.com/documentation/reference/cli/), or use the upload tool on your account page.
 
 ###Gravatar###
 
