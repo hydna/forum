@@ -18,6 +18,8 @@ var scroller                = null;
 var allowedToSnap           = true;
 var allowTimeout            = null;
 var currentScrolldiff       = 0;
+var contentFrame            = null;
+var contentContainer        = null;
 
 $(window).load( function(){
     
@@ -405,6 +407,9 @@ $(document).ready(function() {
     
     $(window).resize( updateSize );
     
+    contentContainer = $("#scroller");
+    contentFrame = $("#content_id");
+    
     updateSize();
     
 });
@@ -483,8 +488,8 @@ function scrollToBottom(){
     
     if( allowedToSnap ){
         
-        var contentheight = $("#scroller").outerHeight();
-        var containerheight = $("#content_id").outerHeight();
+        var contentheight = contentContainer.outerHeight();
+        var containerheight = contentFrame.outerHeight();
         
         var diff = contentheight - containerheight;
         
@@ -618,6 +623,7 @@ $.fn.chatMessage = function( id, nick, message, profile) {
         }else{
             target.fadeOut( "fast", function(){
                 target.remove();
+                scroller.refresh();
             });
         }
         
