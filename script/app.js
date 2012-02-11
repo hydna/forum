@@ -24,7 +24,7 @@ $(window).load( function(){
     scroller = new iScroll('content_id', { 
         hScrollbar: false, 
         vScrollbar: true,
-        onScrollStart : function(){
+        onScrollStart : function(){;
             allowedToSnap = false;
         },
         
