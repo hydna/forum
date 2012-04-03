@@ -3,67 +3,24 @@ ROOM_OFFSET = 2;
 MAX_ROOMS = 20
 MAX_USERS_PER_ROOM = 20
 
-namespace = "forum"
 
-  cache = "rooms"
-    max = MAX_ROOMS
-    size = 100
-  end
-
-  /*
-    Cache contains the following information:
-
-      - connection id
-      - alias
-      - md5 for gravatar image
-  
-  */
-  for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
-  cache = "room" + ROOM
-    max = MAX_USERS_PER_ROOM
-    size = 60
-  end
-  }
+SCRIPT_ENV = {
+  LOBBY_CHANNEL: LOBBY_CHANNEL
+  ROOM_OFFSET: ROOM_OFFSET,
+  MAX_ROOMS: MAX_ROOMS,
+  MAX_USERS_PER_ROOM: MAX_USERS_PER_ROOM
+}
 
 
-  script = "onhandshake"
-    path = "./onhandshake.js"
-  end
-
-
-  script = "onjoinroom"
-    path = "./onjoinroom.js"
-  end
-
-
-  script = "onleaveroom"
-    path = "./onleaveroom.js"
-  end
-
-
-  script = "api_create_room"
-    path = "./api_create_room.js"
-  end
-
-
-  script = "api_get_rooms"
-    path = "./api_get_rooms.js"
-  end
-
-
-  script = "api_get_user_list"
-    path = "./api_get_user_list.js"
-  end
-
-
-end
-
-
-directive = "open"
+open
 
   channel = LOBBY_CHANNEL
     mode = "e"
-      run("forum:onhandshake")
+      run("./onhandshake.js")
+      when = $CODE
+        deny($MESSAGE)
+      end
+      allow($MESSAGE)
     end
     deny("CHANNEL_MUST_BE_OPENED_WITH_EMIT_ONLY")
   end
@@ -72,7 +29,11 @@ directive = "open"
   for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
     mode = "rwe"
-      run("forum:onjoinroom")
+      run("./onjoinroom.js", SCRIPT_ENV)
+      when = $CODE
+        deny($MESSAGE)
+      end
+      allow()
     end
     deny("CHANNEL_MUST_BE_OPENED_IN_RWE_MODE")
   end
@@ -81,16 +42,16 @@ directive = "open"
 end
 
 
-directive = "emit"
+emit
 
   channel = LOBBY_CHANNEL
 
     token = match("^create_room")
-      run("forum:api_create_room")
+      run("./api_create_room.js", SCRIPT_ENV)
     end
 
     token = match("^get_rooms")
-      run("forum:api_get_rooms")
+      run("./api_get_rooms.js", SCRIPT_ENV)
     end
 
   end
@@ -98,17 +59,19 @@ directive = "emit"
   for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
     token = "get_user_list"
-      run("forum:api_get_user_list")
+      run("./api_get_user_list.js", SCRIPT_ENV)
     end
   end
   }
 end
 
 
-directive = "close"
+close
+
   for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
-    run("forum:onleaveroom")
+    run("./onleaveroom.js")
   end
   }
+
 end
