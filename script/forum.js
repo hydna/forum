@@ -25,11 +25,13 @@
 
 
   function joinLobby(nick, hash, callback) {
+    var href
 
     userNick = nick;
     userHash = hash;
 
-    lobbyChannel = new HydnaChannel(ROOT_URL + "/" + LOBBY_CHANNEL, "emit");
+    href = ROOT_URL + "/" + LOBBY_CHANNEL + "?" + [userNick, userHash].join(",");
+    lobbyChannel = new HydnaChannel(href, "emit");
 
     function cleanup(err) {
       lobbyChannel.onerror = null;
@@ -62,7 +64,7 @@
       var method = header[0];
       var code = header[1];
       var message = graph.slice(1).join(" ");
-      
+
       if (method == "notif") {
           if (exports.onnotif) {
               exports.onnotif(code, message);
@@ -159,11 +161,11 @@
 
     });
   }
-  
+
   function currentChannel(){
-      
+
       return roomChannel && roomChannel.id;
-      
+
   }
 
   function getUserList(callback) {
@@ -181,7 +183,7 @@
 
 
   function createRoomChannel(chanid, callback) {
-    var url = ROOT_URL + "/" + chanid + "?" + [userNick, userHash].join(",");
+    var url = ROOT_URL + "/" + chanid;
     var chan = new HydnaChannel(url, "rwe");
 
     function cleanup() {
@@ -221,7 +223,7 @@
       var message = graph.slice(1).join(" ");
       var list;
       var details;
-      
+
       switch (method) {
         case "get_user_list":
           list = message.split(";");
@@ -262,27 +264,27 @@
       } catch (e) {
         return;
       }
-      
+
       var usr = graph.user.split("-");
       var id = usr[0];
       var time = usr[1];
-      
+
       if (!chan.users[id]) {
         return;
       }
 
       if (exports.onmessage) {
-          
-          
+
+
           var msg = {
               time: time,
               message: ""
           };
-          
+
           if( graph.message ){
-              msg.message = graph.message; 
+              msg.message = graph.message;
           }
-        
+
         exports.onmessage({
             user: chan.users[id],
             time: msg.time,
@@ -292,7 +294,7 @@
       }
     }
   }
-  
+
   function postTyping(){
       var graph;
 
@@ -310,7 +312,7 @@
   function postMessage(message, timestamp) {
     var graph;
     var time = 0;
-    
+
     if(timestamp){
        time = timestamp;
     }
@@ -318,7 +320,7 @@
     if (!roomChannel) {
       return;
     }
-    
+
     var usr = [ connid, "-", time ].join("");
 
     graph = {
