@@ -34,10 +34,11 @@ for (var id = ROOM_OFFSET; id < MAX_ROOMS + ROOM_OFFSET; id++) {
   room = domain.getChannel(id);
 
   // Check if room channel is already active
-  if (chan.get("active") != "yes") {
+  if (room.get("active") != "yes") {
 
-    // Set channel to active
-    chan.set("active", "yes");
+    // Set channel to active.
+    room.set("active", "yes");
+    room.set("title", title);
 
     // Send back the channel id of the new room.
     message = "create_room:ok " + id;

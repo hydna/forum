@@ -42,9 +42,5 @@ channel.emit(message);
 message = "notif:room-info " + [channel.id, channel.get("count")].join(",");
 domain.getChannel(LOBBY_CHANNEL).emit(message);
 
-// Allow the open of channel. Current connection is now granted to
-// join the room.
-connection.allow();
-
 // All done!
 exit(0);

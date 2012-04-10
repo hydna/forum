@@ -14,7 +14,7 @@ result = [];
 for (var id = ROOM_OFFSET; id < MAX_ROOMS; id++) {
   room = domain.getChannel(id);
   if (room.get("active") == "yes") {
-    str = [id, room.get("title"), room.get("count")].join(",");
+    str = [id, room.get("title"), room.get("count") || "0"].join(",");
     result.push(str);
   }
 }

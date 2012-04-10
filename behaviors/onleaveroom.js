@@ -3,7 +3,6 @@
 // Constants
 var LOBBY_CHANNEL       = script.env.LOBBY_CHANNEL;
 
-
 // Variables
 var connid              = null;
 var message             = null;
@@ -20,7 +19,7 @@ channel.decr("count", 0);
 if (channel.get("count") == 0) {
 
   // Tell every user that room has been destroyed.
-  message = "notif:room-destroyed " + channel;
+  message = "notif:room-destroyed " + channel.id;
   domain.getChannel(LOBBY_CHANNEL).emit(message);
   channel.reset();
 

@@ -1,13 +1,13 @@
 LOBBY_CHANNEL = 1
-ROOM_OFFSET = 2;
+ROOM_OFFSET = 2
 MAX_ROOMS = 20
 MAX_USERS_PER_ROOM = 20
 
 
 SCRIPT_ENV = {
-  LOBBY_CHANNEL: LOBBY_CHANNEL
-  ROOM_OFFSET: ROOM_OFFSET,
-  MAX_ROOMS: MAX_ROOMS,
+  LOBBY_CHANNEL:      LOBBY_CHANNEL,
+  ROOM_OFFSET:        ROOM_OFFSET,
+  MAX_ROOMS:          MAX_ROOMS,
   MAX_USERS_PER_ROOM: MAX_USERS_PER_ROOM
 }
 
@@ -26,7 +26,7 @@ open
   end
 
 
-  for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
+  for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
     mode = "rwe"
       run("./onjoinroom.js", SCRIPT_ENV)
@@ -56,21 +56,22 @@ emit
 
   end
 
-  for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
+  for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
     token = "get_user_list"
       run("./api_get_user_list.js", SCRIPT_ENV)
     end
   end
   }
+
 end
 
 
 close
 
-  for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
+  for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
   channel = (ROOM + ROOM_OFFSET)
-    run("./onleaveroom.js")
+    run("./onleaveroom.js", SCRIPT_ENV)
   end
   }
 
