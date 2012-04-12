@@ -110,7 +110,7 @@ On the emit directive we look at the user provided token to see what they want t
 
 	emit
 		channel = LOBBY_CHANNEL
-		
+	
 	    	token = match("^create_room")
 	      		run("./api_create_room.js")
 	    	end
@@ -119,42 +119,43 @@ On the emit directive we look at the user provided token to see what they want t
 	      		run("./api_get_rooms.js")
 	    	end
 		end
-		
+	
 	....
 
 
 **-- api_create_rooms.js (behaviors)**
     
-	....
+  	....
 	
-	// Send back the channel id of the new room.
-  message = "create_room:ok " + id;
-  connection.reply(message);
+  	// Send back the channel id of the new room.
+    message = "create_room:ok " + id;
+    connection.reply(message);
 
-  // Also send a notification to all other connected user. They
-  // should be aware that the new room exists
-  message = "notif:room-created " + [id, title].join(",");
-  channel.emit(message);
+    // Also send a notification to all other connected user. They
+    // should be aware that the new room exists
+    message = "notif:room-created " + [id, title].join(",");
+    channel.emit(message);
 	
-	....
+  	....
 	
 	
 **-- api_get_rooms.js (behaviors)**
     
-	....
+  	....
 	
-  result = [];
+    result = [];
 
-  for (var id = ROOM_OFFSET; id < MAX_ROOMS; id++) {
-    room = domain.getChannel(id);
-    if (room.get("active") == "yes") {
-      str = [id, room.get("title"), room.get("count") || "0"].join(",");
-      result.push(str);
+    for (var id = ROOM_OFFSET; id < MAX_ROOMS; id++) {
+      room = domain.getChannel(id);
+      if (room.get("active") == "yes") {
+        str = [id, room.get("title"), room.get("count") || "0"].join(",");
+        result.push(str);
+      }
     }
-  }
 
-  connection.reply("get_rooms:ok " + result.join(";"));	
-	....
+    connection.reply("get_rooms:ok " + result.join(";"));	
+
+  	....
 
 Once we have a room list or created a room we can proceed to enter one.
 
@@ -277,45 +278,46 @@ On close we remove the user from the room and also checks if this was the last u
 
 **-- setup.be (behaviors)**
 
-  close
+    close
 
-    for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
-    channel = (ROOM + ROOM_OFFSET)
-      run("./onleaveroom.js", SCRIPT_ENV)
+      for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
+      channel = (ROOM + ROOM_OFFSET)
+        run("./onleaveroom.js", SCRIPT_ENV)
+      end
+      }
+
     end
-    }
-
-  end
 
 **-- onleaveroom.js (behaviors)**
 
-  // Convert connection to string
-  connid = connection.id.toString(16);
+    // Convert connection to string
+    connid = connection.id.toString(16);
 
-  // Remove connection from channel colllection
-  channel.rem("connections", new RegExp("^" + connid));
-  channel.decr("count", 0);
+    // Remove connection from channel colllection
+    channel.rem("connections", new RegExp("^" + connid));
+    channel.decr("count", 0);
 
-  // Check if current connection was the last user in the room
-  if (channel.get("count") == 0) {
+    // Check if current connection was the last user in the room
+    if (channel.get("count") == 0) {
 
-    // Tell every user that room has been destroyed.
-    message = "notif:room-destroyed " + channel.id;
-    domain.getChannel(LOBBY_CHANNEL).emit(message);
-    channel.reset();
+      // Tell every user that room has been destroyed.
+      message = "notif:room-destroyed " + channel.id;
+      domain.getChannel(LOBBY_CHANNEL).emit(message);
+      channel.reset();
 
-  } else {
+    } else {
 
-    // Tell other users in room that current connection leaved.
-    message = "notif:user-leave " + connid;
-    channel.emit(message);
+      // Tell other users in room that current connection leaved.
+      message = "notif:user-leave " + connid;
+      channel.emit(message);
 
-    // Tell lobby that room details have changed
-    message = "notif:room-info " + [channel.id, channel.get("count")].join(",");
-    domain.getChannel(LOBBY_CHANNEL).emit(message);
+      // Tell lobby that room details have changed
+      message = "notif:room-info " + [channel.id, channel.get("count")].join(",");
+      domain.getChannel(LOBBY_CHANNEL).emit(message);
 
-  }	
-	....
+    }	
+
+    ....
 
 As you can see signals play a large part in notifying users of changes and also invoking functionality in behaviors, like returning a list of users. This way you can achieve quite a a lot without needing to have your own server setup.
 
