@@ -15,7 +15,7 @@ A chat forum with rooms. Uses [gravatar](http://gravatar.com/) for profile image
 ###What is it?###
 Forum is an HTML and Javascript chat app with rooms. It’s all static assets and some hydna [behaviors](http://hydna.com/documentation/behaviors/introduction/), just create a [hydna account](https://www.hydna.com/account/signup/), upload the behavior files and you are in business. It also works on IOS devices. 
 
-[Try it out](http://hydna.github.com/forum)  
+[Try it out](http://hydna.github.com/forum)
 
 ###Highlights###
 
@@ -34,31 +34,14 @@ What makes the forum app more than just the most basic chat app, is the feature 
 - api_get_rooms.js
 - api_create_rooms.js
 
-In **setup.be** we create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold our rooms and for each room we also create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold each rooms users. In this demo we have a maximum of 20 rooms with 20 users each, this can of course be changed with the appropriate hydna account settings.
+In **setup.be** we create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold our rooms and for each room we also create a [cache](https://www.hydna.com/documentation/behaviors/packages/resource/cache/) to hold each rooms users. In this demo we have a maximum of 40 rooms with 50 users each, this can of course be changed with the appropriate hydna account settings.
 
 **-- setup.be (behaviors)**
 
-	namespace = "forum"
-	
-		cache = "rooms"
-	    	max = MAX_ROOMS
-	    	size = 100
-	  	end
-
-	  	/*
-	    Cache contains the following information:
-
-	      - connection id
-	      - alias
-	      - md5 for gravatar image
-  
-	  	*/
-	  	for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
-	   		cache = "room" + ROOM
-	    		max = MAX_USERS_PER_ROOM
-	    		size = 60
-	  		end
-		}
+    LOBBY_CHANNEL = 1
+    ROOM_OFFSET = 2
+    MAX_ROOMS = 40
+    MAX_USERS_PER_ROOM = 50
 		
 		.... 
 
@@ -125,15 +108,15 @@ On the emit directive we look at the user provided token to see what they want t
 
 **-- setup.be (behaviors)**
 
-	directive = "emit"
+	emit
 		channel = LOBBY_CHANNEL
 		
 	    	token = match("^create_room")
-	      		run("forum:api_create_room")
+	      		run("./api_create_room.js")
 	    	end
 
 	    	token = match("^get_rooms")
-	      		run("forum:api_get_rooms")
+	      		run("./api_get_rooms.js")
 	    	end
 		end
 		
@@ -145,13 +128,13 @@ On the emit directive we look at the user provided token to see what they want t
 	....
 	
 	// Send back the channel id of the new room.
-	message = "create_room:ok " + (CHANNEL_OFFSET + slotid);
-	signal.reply(message);
+  message = "create_room:ok " + id;
+  connection.reply(message);
 
-	// Also send a notification to all other connected user. They
-	// should be aware that the new room exists
-	message = "notif:room-created " + [(CHANNEL_OFFSET + slotid), title].join(",");
-	signal.emitChannel(LOBBY_CHANNEL, message);
+  // Also send a notification to all other connected user. They
+  // should be aware that the new room exists
+  message = "notif:room-created " + [id, title].join(",");
+  channel.emit(message);
 	
 	....
 	
@@ -160,18 +143,17 @@ On the emit directive we look at the user provided token to see what they want t
     
 	....
 	
-	result = [];
-	all = rooms.findall();
+  result = [];
 
-	for (var i = 0, l = all.length; i < l; i++) {
-	  slotid = all[i];
-	  title = rooms.find(slotid);
-	  room = resource.load("forum:room" + slotid);
-	  result.push([ROOM_OFFSET + slotid, title, room.count()].join(","))
-	}
-	
-	signal.reply("get_rooms:ok " + result.join(";"));
-	
+  for (var id = ROOM_OFFSET; id < MAX_ROOMS; id++) {
+    room = domain.getChannel(id);
+    if (room.get("active") == "yes") {
+      str = [id, room.get("title"), room.get("count") || "0"].join(",");
+      result.push(str);
+    }
+  }
+
+  connection.reply("get_rooms:ok " + result.join(";"));	
 	....
 
 Once we have a room list or created a room we can proceed to enter one.
@@ -261,67 +243,78 @@ On open on the LOBBY_CHANNEL we invoke **onhandshake.js** where we get the **con
 
 **-- setup.be (behaviors)**
 
-	directive = "open"
-		channel = LOBBY_CHANNEL
-	    	mode = "e"
-				run("forum:onhandshake")
-	        end
-	    	deny("CHANNEL_MUST_BE_OPENED_WITH_EMIT_ONLY")
-	  	end
+  open
 
-	  	for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
-	  	channel = (ROOM + ROOM_OFFSET)
-	    	mode = "rwe"
-	      		run("forum:onjoinroom")
-	    	end
-	    	deny("CHANNEL_MUST_BE_OPENED_IN_RWE_MODE")
-	  	end
-	  	}
-	end  
+    channel = LOBBY_CHANNEL
+      mode = "e"
+        run("./onhandshake.js")
+        when = $CODE
+          deny($MESSAGE)
+        end
+        allow($MESSAGE)
+      end
+      deny("CHANNEL_MUST_BE_OPENED_WITH_EMIT_ONLY")
+    end
+
+
+    for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
+    channel = (ROOM + ROOM_OFFSET)
+      mode = "rwe"
+        run("./onjoinroom.js", SCRIPT_ENV)
+        when = $CODE
+          deny($MESSAGE)
+        end
+        allow()
+      end
+      deny("CHANNEL_MUST_BE_OPENED_IN_RWE_MODE")
+    end
+    }
+
+  end
 
 
 On close we remove the user from the room and also checks if this was the last user in this room we remove the room and notify on the LOBBY_CHANNEL what happened, if this is not the last user we notify the other users in the room what user just left.
 
 **-- setup.be (behaviors)**
 
-	directive = "close"
-		for (var ROOM = 1; ROOM <= MAX_ROOMS; ROOM++) {
-	  	channel = (ROOM + ROOM_OFFSET)
-	    	run("forum:onleaveroom")
-	  	end
-	  	}
-	end  
+  close
+
+    for (var ROOM = 0; ROOM < MAX_ROOMS; ROOM++) {
+    channel = (ROOM + ROOM_OFFSET)
+      run("./onleaveroom.js", SCRIPT_ENV)
+    end
+    }
+
+  end
 
 **-- onleaveroom.js (behaviors)**
 
-	// Find the slotid of connection
-	slotid = room.find(new RegExp("^" + connid));
-	
-	// Free the slot
-	room.dealloc(slotid);
+  // Convert connection to string
+  connid = connection.id.toString(16);
 
-	// Check if current connection was the last user in the room
-	if (room.count() == 0) {
+  // Remove connection from channel colllection
+  channel.rem("connections", new RegExp("^" + connid));
+  channel.decr("count", 0);
 
-		rooms = resource.load("forum:rooms");
+  // Check if current connection was the last user in the room
+  if (channel.get("count") == 0) {
 
-	  	// Free the room id slot
-	  	rooms.dealloc(roomid);
+    // Tell every user that room has been destroyed.
+    message = "notif:room-destroyed " + channel.id;
+    domain.getChannel(LOBBY_CHANNEL).emit(message);
+    channel.reset();
 
-	  	// Tell every user that room has been destroyed.
-	  	message = "notif:room-destroyed " + channel;
-	  	signal.emitChannel(LOBBY_CHANNEL, message);
+  } else {
 
-	} else {
-		// Tell other users in room that current connection leaved.
-	  	message = "notif:user-leave " + connid;
-	  	signal.emitChannel(channel, message);
+    // Tell other users in room that current connection leaved.
+    message = "notif:user-leave " + connid;
+    channel.emit(message);
 
-	  	// Tell lobby that room details have changed
-	  	message = "notif:room-info " + [channel, room.count()].join(",");
-	  	signal.emitChannel(LOBBY_CHANNEL, message);
-	}
-	
+    // Tell lobby that room details have changed
+    message = "notif:room-info " + [channel.id, channel.get("count")].join(",");
+    domain.getChannel(LOBBY_CHANNEL).emit(message);
+
+  }	
 	....
 
 As you can see signals play a large part in notifying users of changes and also invoking functionality in behaviors, like returning a list of users. This way you can achieve quite a a lot without needing to have your own server setup.
